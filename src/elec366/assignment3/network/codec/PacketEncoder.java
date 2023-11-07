@@ -3,7 +3,7 @@ package elec366.assignment3.network.codec;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import elec366.assignment3.network.crypto.ByteStreamCipher;
+import elec366.assignment3.network.crypto.StreamCipher;
 import elec366.assignment3.network.packet.Packet;
 import elec366.assignment3.network.packet.PacketDirection;
 
@@ -11,7 +11,7 @@ public class PacketEncoder implements Cipherable {
 	
 	private final OutputStream oStream; 
 	
-	private ByteStreamCipher cipher; 
+	private StreamCipher cipher; 
 	
 	public PacketEncoder(OutputStream oStream) {
 		this.oStream = oStream; 
@@ -24,8 +24,13 @@ public class PacketEncoder implements Cipherable {
 	}
 
 	@Override
-	public void attachCipher(ByteStreamCipher cipher) {
+	public void attachCipher(StreamCipher cipher) {
 		this.cipher = cipher; 
+	}
+	
+	@Override
+	public boolean isEncrypted() {
+		return this.cipher != null; 
 	}
 	
 	public void send(Packet packet) throws IOException {
@@ -49,7 +54,7 @@ public class PacketEncoder implements Cipherable {
 	
 	private void write(byte b) throws IOException {
 		if(this.cipher != null) 
-			b = this.cipher.apply(b); 
+			b = this.cipher.encrypt(b); 
 		this.oStream.write(b);
 	}
 	

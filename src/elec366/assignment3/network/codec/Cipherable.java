@@ -1,11 +1,13 @@
 package elec366.assignment3.network.codec;
 
-import elec366.assignment3.network.crypto.ByteStreamCipher;
+import elec366.assignment3.network.crypto.StreamCipher;
 
 public interface Cipherable {
 	
 	public void removeCipher(); 
 	
-	public void attachCipher(ByteStreamCipher cipher); 
+	public void attachCipher(StreamCipher cipher); 
 
+	public boolean isEncrypted(); 
+	
 }

@@ -1,12 +1,14 @@
 package elec366.assignment3.network.codec;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import elec366.assignment3.network.codec.exception.PacketDesynchronizedException;
 import elec366.assignment3.network.codec.exception.PacketDecodeException;
 import elec366.assignment3.network.codec.exception.PacketHeaderInvalidException;
-import elec366.assignment3.network.crypto.ByteStreamCipher;
+import elec366.assignment3.network.crypto.StreamCipher;
 import elec366.assignment3.network.packet.Packet;
 import elec366.assignment3.network.packet.PacketType;
 
@@ -25,7 +27,7 @@ public class PacketDecoder implements Cipherable {
 	private int buffer0; 
 	private byte[] buffer1; 
 	
-	private ByteStreamCipher cipher; 
+	private StreamCipher cipher; 
 	
 	public PacketDecoder() {
 		this.state = State.READ_LENGTH; 
@@ -41,12 +43,17 @@ public class PacketDecoder implements Cipherable {
 	}
 	
 	@Override
-	public void attachCipher(ByteStreamCipher cipher) {
+	public void attachCipher(StreamCipher cipher) {
 		this.cipher = cipher; 
 	}
 	
+	@Override
+	public boolean isEncrypted() {
+		return this.cipher != null; 
+	}
+	
 	public Packet accept(byte input0) throws PacketDecodeException {
-		if(this.cipher != null) input0 = this.cipher.apply(input0); 
+		if(this.cipher != null) input0 = this.cipher.decrypt(input0); 
 		int input = Byte.toUnsignedInt(input0); 
 		
 		Packet packet = null; 
@@ -119,6 +126,20 @@ public class PacketDecoder implements Cipherable {
 		}
 	}
 	
-	
+	// Mainly used for debugging
+	public Packet readFullPacket(InputStream iStream) throws PacketDecodeException {
+		try {
+			Packet packet = null; 
+			while(packet == null) {
+				int data = iStream.read(); 
+				if(data < 0) throw new RuntimeException("Input stream drained."); 
+				packet = this.accept((byte)data); 
+			}
+			return packet; 
+		}
+		catch(IOException ex) {
+			throw new RuntimeException(ex); 
+		}
+	}
 	
 }
