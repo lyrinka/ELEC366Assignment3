@@ -1,12 +1,12 @@
 package elec366.assignment3;
 
-import elec366.assignment3.network.NetworkTest;
+import elec366.assignment3.server.ServerTest;
 
 public class Launcher {
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InterruptedException {
 		
-		NetworkTest.comprehensiveTest(); 
+		ServerTest.comprehensiveTest();
 		
 	}
 

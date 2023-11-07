@@ -10,6 +10,7 @@ import elec366.assignment3.network.codec.*;
 import elec366.assignment3.network.codec.exception.*;
 import elec366.assignment3.network.crypto.*;
 import elec366.assignment3.network.packet.impl.*;
+import elec366.assignment3.network.serdes.exception.PayloadDeserializationException;
 
 public class NetworkTest {
 
@@ -71,7 +72,7 @@ public class NetworkTest {
 			System.out.println(((PacketOutChat)clientDecoder.readFullPacket(clientRx)).toString()); 
 			
 		}
-		catch(IOException | PacketDecodeException ex) {
+		catch(IOException | PacketDecodeException | PayloadDeserializationException ex) {
 			throw new RuntimeException(ex); 
 		}
 		

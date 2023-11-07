@@ -11,6 +11,7 @@ import elec366.assignment3.network.codec.exception.PacketHeaderInvalidException;
 import elec366.assignment3.network.crypto.StreamCipher;
 import elec366.assignment3.network.packet.Packet;
 import elec366.assignment3.network.packet.PacketType;
+import elec366.assignment3.network.serdes.exception.PayloadDeserializationException;
 
 public class PacketDecoder implements Cipherable {
 	
@@ -52,7 +53,7 @@ public class PacketDecoder implements Cipherable {
 		return this.cipher != null; 
 	}
 	
-	public Packet accept(byte input0) throws PacketDecodeException {
+	public Packet accept(byte input0) throws PacketDecodeException, PayloadDeserializationException {
 		if(this.cipher != null) input0 = this.cipher.decrypt(input0); 
 		int input = Byte.toUnsignedInt(input0); 
 		
@@ -94,7 +95,7 @@ public class PacketDecoder implements Cipherable {
 		return packet; 
 	}
 	
-	private Packet processPacketAndContinue() throws PacketDecodeException {
+	private Packet processPacketAndContinue() throws PacketDecodeException, PayloadDeserializationException {
 		Packet packet = this.processPacket(this.buffer0, this.buffer1); 
 		this.state = State.READ_LENGTH; 
 		this.index = 0; 
@@ -103,7 +104,7 @@ public class PacketDecoder implements Cipherable {
 		return packet; 
 	}
 
-	private Packet processPacket(int header, byte[] packet) throws PacketDecodeException {
+	private Packet processPacket(int header, byte[] packet) throws PacketDecodeException, PayloadDeserializationException {
 		PacketType type;
 		
 		if((header & 0x80) != 0) {
@@ -119,15 +120,22 @@ public class PacketDecoder implements Cipherable {
 		Class<? extends Packet> packetClass = type.getPacketClass(); 
 		try {
 			Constructor<? extends Packet> constructor = packetClass.getConstructor(byte[].class);
-			return constructor.newInstance(packet); 
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return constructor.newInstance(packet); // This constructor may throw PayloadDeserializationException
+		} 
+		catch(InvocationTargetException e) {
+			// This constructor may throw PayloadDeserializationException
+			if(e.getCause() instanceof PayloadDeserializationException)
+				throw (PayloadDeserializationException)e.getCause(); 
+			else throw new RuntimeException(e); 
+		}
+		catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
 			// There's a problem with our code, crash the application now
 			throw new RuntimeException(e); 
 		}
 	}
 	
 	// Mainly used for debugging
-	public Packet readFullPacket(InputStream iStream) throws PacketDecodeException {
+	public Packet readFullPacket(InputStream iStream) throws PacketDecodeException, PayloadDeserializationException {
 		try {
 			Packet packet = null; 
 			while(packet == null) {
