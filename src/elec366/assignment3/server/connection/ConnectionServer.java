@@ -118,22 +118,4 @@ public abstract class ConnectionServer extends Thread {
 	
 	protected abstract void onInboundPacket(int connectionID, Packet.In packet); 
 	
-	/*
-	
-	protected void onConnection(int connectionID, String reason) {
-		if(reason == null) reason = ""; 
-		this.logger.info("Client " + connectionID + " has connected. " + reason);
-	}
-	
-	protected void onDisconnection(int connectionID, String reason) {
-		if(reason == null) reason = ""; 
-		this.logger.info("Client " + connectionID + " has disconnected. " + reason);
-	}
-	
-	protected void onInboundPacket(int connectionID, Packet.In packet) {
-		this.logger.info("Client " + connectionID + " sent packet: " + packet.toString());
-	}
-	
-	*/
-	
 }

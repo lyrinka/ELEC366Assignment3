@@ -100,14 +100,14 @@ public abstract class PacketServer extends ConnectionServer {
 	
 	@Override
 	protected void onConnection(int connectionID, String reason) {
-		this.getLogger().info("Client " + connectionID + " has connected.");
+		this.getLogger().fine("Client " + connectionID + " has connected.");
 		this.clientMap.put(connectionID, State.INITIAL); 
 		this.sendPacket(connectionID, new PacketOutSetPublicKey(this.keypair.getPublic()));
 	}
 
 	@Override
 	protected void onDisconnection(int connectionID, String reason) {
-		this.getLogger().info("Client " + connectionID + " has disconnected.");
+		this.getLogger().fine("Client " + connectionID + " has disconnected.");
 		this.clientMap.remove(connectionID); 
 		Player player = this.playerMap.remove(connectionID); 
 		if(player == null) return; 
@@ -124,8 +124,8 @@ public abstract class PacketServer extends ConnectionServer {
 		}
 		byte[] encryptedKey = packet.getKey(); 
 		byte[] encryptedIv = packet.getIv(); 
-		byte[] key = this.asc.decrypt(encryptedIv, this.keypair.getPrivate());
-		byte[] iv = this.asc.decrypt(encryptedKey, this.keypair.getPrivate()); 
+		byte[] key = this.asc.decrypt(encryptedKey, this.keypair.getPrivate());
+		byte[] iv = this.asc.decrypt(encryptedIv, this.keypair.getPrivate()); 
 		StreamCipher encodingCipher = new StreamCipherAESImpl(key, iv); 
 		StreamCipher decodingCipher = new StreamCipherAESImpl(key, iv); 
 		this.send(new EncryptionRequestMessage(id, encodingCipher, decodingCipher));
