@@ -5,7 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,18 +29,19 @@ public class Connection {
 	private static final String RX_TAG = "ConnectionWorker-%d-RX"; 
 	private static final String TX_TAG = "ConnectionWorker-%d-TX"; 
 	
+	private final Logger logger;
+	
 	private final int id; 
-	private final Logger logger; 
 	private final Socket socket; 
-	private final PriorityBlockingQueue<DownstreamSDU> downstream; 
-	private final PriorityBlockingQueue<UpstreamSDU> upstream; 
+	private final Supplier<DownstreamSDU> downstream; 
+	private final Consumer<UpstreamSDU> upstream; 
 	
 	private final ConcurrentLinkedQueue<DownstreamEncryptSDU> encryptionRequests; 
 	
-	public Connection(int id, Logger logger, Socket socket, Pair<PriorityBlockingQueue<DownstreamSDU>, PriorityBlockingQueue<UpstreamSDU>> channel) {
-		this.id = id; 
+	public Connection(Logger logger, int id, Socket socket, Pair<Supplier<DownstreamSDU>, Consumer<UpstreamSDU>> channel) {
 		this.logger = logger; 
 		
+		this.id = id; 
 		this.socket = socket; 
 		this.downstream = channel.getFirst(); 
 		this.upstream = channel.getSecond(); 
@@ -82,7 +84,7 @@ public class Connection {
 			catch(IOException ignored) {
 				this.trace("[RX] Exception while closing socket.", ignored); 
 			}
-			this.upstream.add(sdu); 
+			this.upstream.accept(sdu); 
 			this.trace("[RX] Thread termination."); 
 			
 		}, String.format(RX_TAG, this.id)); 
@@ -130,7 +132,7 @@ public class Connection {
 				packet = decoder.accept((byte)data); 
 			}
 			this.trace("[RX] Received packet " + packet.toString());
-			this.upstream.put(new UpstreamPacketSDU(packet)); 
+			this.upstream.accept(new UpstreamPacketSDU(packet)); 
 		}
 		
 	}
@@ -142,7 +144,11 @@ public class Connection {
 		PacketEncoder encoder = new PacketEncoder(oStream); 
 		
 		while(true) {
-			DownstreamSDU sdu = this.downstream.take(); 
+			DownstreamSDU sdu = this.downstream.get(); 
+			if(sdu == null) {
+				this.trace("[TX] Queue fetch interrupted.");
+				return; 
+			}
 			this.trace("[TX] Received SDU: " + sdu.toString());
 			if(sdu instanceof DownstreamDisconnectSDU) return; 
 			if(sdu instanceof DownstreamEncryptSDU) {
