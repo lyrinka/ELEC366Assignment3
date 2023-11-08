@@ -1,4 +1,4 @@
-package elec366.assignment3.server.connection;
+package elec366.assignment3.serverold.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +13,11 @@ import elec366.assignment3.protocol.codec.PacketEncoder;
 import elec366.assignment3.protocol.codec.exception.PacketDecodeException;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
-import elec366.assignment3.server.connection.qmh.ConnectionMessage;
-import elec366.assignment3.server.connection.qmh.DisconnectionMessage;
-import elec366.assignment3.server.connection.qmh.EncryptionRequestMessage;
-import elec366.assignment3.server.connection.qmh.PacketMessage;
-import elec366.assignment3.server.connection.qmh.QueuedMessage;
+import elec366.assignment3.serverold.connection.qmh.ConnectionMessage;
+import elec366.assignment3.serverold.connection.qmh.DisconnectionMessage;
+import elec366.assignment3.serverold.connection.qmh.EncryptionRequestMessage;
+import elec366.assignment3.serverold.connection.qmh.PacketMessage;
+import elec366.assignment3.serverold.connection.qmh.QueuedMessage;
 
 public class ConnectionWorker extends Thread {
 	

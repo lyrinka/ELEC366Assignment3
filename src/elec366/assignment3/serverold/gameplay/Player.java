@@ -1,10 +1,10 @@
-package elec366.assignment3.server.gameplay;
+package elec366.assignment3.serverold.gameplay;
 
 import java.util.Objects;
 
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketOutChat;
-import elec366.assignment3.server.connection.ConnectionServer;
+import elec366.assignment3.serverold.connection.ConnectionServer;
 
 public class Player {
 

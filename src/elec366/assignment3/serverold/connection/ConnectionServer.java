@@ -1,4 +1,4 @@
-package elec366.assignment3.server.connection;
+package elec366.assignment3.serverold.connection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,11 +10,11 @@ import java.util.logging.Logger;
 
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.PacketDirection;
-import elec366.assignment3.server.connection.qmh.ConnectionMessage;
-import elec366.assignment3.server.connection.qmh.DisconnectionMessage;
-import elec366.assignment3.server.connection.qmh.LoggingMessage;
-import elec366.assignment3.server.connection.qmh.PacketMessage;
-import elec366.assignment3.server.connection.qmh.QueuedMessage;
+import elec366.assignment3.serverold.connection.qmh.ConnectionMessage;
+import elec366.assignment3.serverold.connection.qmh.DisconnectionMessage;
+import elec366.assignment3.serverold.connection.qmh.LoggingMessage;
+import elec366.assignment3.serverold.connection.qmh.PacketMessage;
+import elec366.assignment3.serverold.connection.qmh.QueuedMessage;
 
 public abstract class ConnectionServer extends Thread {
 	

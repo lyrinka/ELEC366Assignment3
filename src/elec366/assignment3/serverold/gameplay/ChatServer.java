@@ -1,10 +1,10 @@
-package elec366.assignment3.server.gameplay;
+package elec366.assignment3.serverold.gameplay;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 import elec366.assignment3.protocol.packet.impl.PacketOutChat;
-import elec366.assignment3.server.R;
+import elec366.assignment3.serverold.R;
 
 public class ChatServer extends PacketServer {
 	

@@ -1,4 +1,4 @@
-package elec366.assignment3.server.connection;
+package elec366.assignment3.serverold.connection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import elec366.assignment3.server.connection.qmh.QueuedMessage;
+import elec366.assignment3.serverold.connection.qmh.QueuedMessage;
 
 public class ConnectionHandler extends Thread {
 	

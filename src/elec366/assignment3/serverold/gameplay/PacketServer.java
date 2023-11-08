@@ -1,4 +1,4 @@
-package elec366.assignment3.server.gameplay;
+package elec366.assignment3.serverold.gameplay;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,8 +23,8 @@ import elec366.assignment3.protocol.packet.impl.PacketInQueryPlayerList;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
 import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
-import elec366.assignment3.server.connection.ConnectionServer;
-import elec366.assignment3.server.connection.qmh.EncryptionRequestMessage;
+import elec366.assignment3.serverold.connection.ConnectionServer;
+import elec366.assignment3.serverold.connection.qmh.EncryptionRequestMessage;
 
 public abstract class PacketServer extends ConnectionServer {
 
