@@ -10,12 +10,12 @@ public class Player {
 
 	private final ConnectionServer server; 
 	private final int connectionID; 
-	private final String username; 
+	private final String name; 
 	
-	public Player(ConnectionServer server, int connectionID, String username) {
+	public Player(ConnectionServer server, int connectionID, String name) {
 		this.server = server; 
 		this.connectionID = connectionID; 
-		this.username = username; 
+		this.name = name; 
 	}
 
 	public ConnectionServer getServer() {
@@ -26,8 +26,8 @@ public class Player {
 		return this.connectionID;
 	}
 
-	public String getUsername() {
-		return this.username;
+	public String getName() {
+		return this.name;
 	}
 	
 	public void disconnect() {
@@ -43,12 +43,12 @@ public class Player {
 	}
 	
 	public void sendMessage(String message) {
-		this.sendMessage(PacketOutChat.Type.DEFAULT, message); 
+		this.sendMessage(PacketOutChat.Type.SYSMSG_SERVER, message); 
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(username);
+		return Objects.hash(name);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Player {
 		if (getClass() != obj.getClass())
 			return false;
 		Player other = (Player) obj;
-		return Objects.equals(this.username, other.username);
+		return this.name.equalsIgnoreCase(other.name); 
 	}
 
 }

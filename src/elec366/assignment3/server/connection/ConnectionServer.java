@@ -20,7 +20,6 @@ public abstract class ConnectionServer extends Thread {
 	
 	private static final String TAG = "ServerThread"; 
 	private static final int POLLING_WAIT = 50; 
-	private static final int DEFAULT_PORT = 14569; 
 	
 	private final Logger logger; 
 	
@@ -30,10 +29,6 @@ public abstract class ConnectionServer extends Thread {
 		super(TAG); 
 		this.logger = ConnectionServer.createLogger(); 
 		this.listener = new ConnectionHandler(port); 
-	}
-	
-	public ConnectionServer() {
-		this(DEFAULT_PORT); 
 	}
 	
 	private static Logger createLogger() {

@@ -49,7 +49,8 @@ public abstract class PacketServer extends ConnectionServer {
 	private final KeyPair keypair; 
 	
 	@SuppressWarnings("unchecked")
-	public PacketServer() {
+	public PacketServer(int port) {
+		super(port); 
 		this.getLogger().info("Loading...");
 		this.clientMap = new HashMap<>(); 
 		this.playerMap = new HashMap<>(); 
@@ -140,9 +141,13 @@ public abstract class PacketServer extends ConnectionServer {
 			this.disconnect(id);
 			return; 
 		}
-		Player player = new Player(this, id, packet.getUsername()); 
+		Player player = new Player(this, id, packet.getUsername().trim()); 
 		if(this.playerMap.containsValue(player)) {
 			this.onPlayerUsernameConflict(player);
+			player.disconnect();
+			return; 
+		}
+		if(!this.onPlayerPreLogin(player)) {
 			player.disconnect();
 			return; 
 		}
@@ -153,13 +158,14 @@ public abstract class PacketServer extends ConnectionServer {
 	
 	@PacketHandler
 	private void onPacketInQueryPlayerList(int id, PacketInQueryPlayerList packet) {
-		if(this.clientMap.get(id) != State.ENCRYPTED || this.clientMap.get(id) != State.LOGGED_IN) {
+		if(this.clientMap.get(id) != State.ENCRYPTED && this.clientMap.get(id) != State.LOGGED_IN) {
 			this.getLogger().warning("Client " + id + " sent player list query in the wrong state. How is this possible?");
+			this.getLogger().warning(this.clientMap.get(id).toString());
 			this.getLogger().warning(packet.toString());
 			this.disconnect(id);
 			return; 
 		}
-		this.sendPacket(id, new PacketOutPlayerList(this.playerMap.values().stream().map(p -> p.getUsername()).toArray(String[]::new)));
+		this.updateClientPlayerlist(id); 
 	}
 	
 	@PacketHandler
@@ -176,6 +182,8 @@ public abstract class PacketServer extends ConnectionServer {
 	
 	protected abstract void onPlayerUsernameConflict(Player player); 
 	
+	protected abstract boolean onPlayerPreLogin(Player player); 
+	
 	protected abstract void onPlayerLogin(Player player); 
 	
 	protected abstract void onPlayerChat(Player player, String message); 
@@ -184,6 +192,14 @@ public abstract class PacketServer extends ConnectionServer {
 	
 	public List<Player> getOnlinePlayers() {
 		return new ArrayList<>(this.playerMap.values()); 
+	}
+	
+	public void updateClientPlayerlist(int connectionID) {
+		this.sendPacket(connectionID, new PacketOutPlayerList(this.playerMap.values().stream().map(p -> p.getName()).toArray(String[]::new)));
+	}
+	
+	public void updateClientPlayerlist(Player player) {
+		this.updateClientPlayerlist(player.getConnectionID());
 	}
 
 }
