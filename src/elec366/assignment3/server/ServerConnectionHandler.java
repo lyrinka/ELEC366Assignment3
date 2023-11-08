@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import elec366.assignment3.network.Connection;
+import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
 import elec366.assignment3.network.sdu.DownstreamSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
@@ -89,7 +90,7 @@ public class ServerConnectionHandler {
 				
 				UpstreamSDUConsumer ups = new UpstreamSDUConsumer(this, connectionID); 
 				DownstreamSDUSupplier dns = new DownstreamSDUSupplier(); 
-				Connection connection = new Connection(this.logger, connectionID, socket, new Pair<>(dns, ups)); 
+				Connection connection = new Connection(this.logger, Integer.toString(connectionID), socket, new Pair<>(dns, ups)); 
 				
 				connection.start();
 				this.clientMap.put(connectionID, dns); 
@@ -116,8 +117,10 @@ public class ServerConnectionHandler {
 		@Override
 		public void accept(UpstreamSDU sdu) {
 			if(sdu == null) return; 
-			if(sdu instanceof UpstreamDisconnectionSDU) 
+			if(sdu instanceof UpstreamDisconnectionSDU) {
+				this.handler.send(new Pair<>(this.connectionID, new DownstreamDisconnectSDU()));
 				this.handler.clientMap.remove(this.connectionID); 
+			}
 			this.handler.upstream.put(new Pair<>(this.connectionID, sdu));
 		}
 		

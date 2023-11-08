@@ -21,10 +21,6 @@ public class UpstreamLoggingSDU extends UpstreamSDU {
 	public UpstreamLoggingSDU(Throwable cause) {
 		this("Exception.", cause); 
 	}
-	
-	public UpstreamLoggingSDU() {
-		this("A problem occured."); 
-	}
 
 	public String getReason() {
 		return this.message;
@@ -63,7 +59,7 @@ public class UpstreamLoggingSDU extends UpstreamSDU {
 
 	@Override
 	public String toString() {
-		return "UpstreamLoggingSDU [" + this.message + ", " + (this.cause != null ? "cause=" + this.cause : "") + "]";
+		return "UpstreamLoggingSDU [" + this.message + ", " + (this.cause != null ? "cause= " + this.cause : "") + "]";
 	}
 
 }

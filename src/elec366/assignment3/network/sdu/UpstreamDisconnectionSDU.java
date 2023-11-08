@@ -3,7 +3,7 @@ package elec366.assignment3.network.sdu;
 public class UpstreamDisconnectionSDU extends UpstreamLoggingSDU {
 
 	public UpstreamDisconnectionSDU() {
-		super();
+		super("Disconnected.");
 		// TODO Auto-generated constructor stub
 	}
 

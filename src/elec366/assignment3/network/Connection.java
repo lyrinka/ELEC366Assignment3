@@ -26,22 +26,22 @@ import elec366.assignment3.util.Pair;
 
 public class Connection {
 
-	private static final String RX_TAG = "ConnectionWorker-%d-RX"; 
-	private static final String TX_TAG = "ConnectionWorker-%d-TX"; 
+	private static final String RX_TAG = "ConnectionWorker-%s-RX"; 
+	private static final String TX_TAG = "ConnectionWorker-%s-TX"; 
 	
 	private final Logger logger;
 	
-	private final int id; 
+	private final String name; 
 	private final Socket socket; 
 	private final Supplier<DownstreamSDU> downstream; 
 	private final Consumer<UpstreamSDU> upstream; 
 	
 	private final ConcurrentLinkedQueue<DownstreamEncryptSDU> encryptionRequests; 
 	
-	public Connection(Logger logger, int id, Socket socket, Pair<Supplier<DownstreamSDU>, Consumer<UpstreamSDU>> channel) {
+	public Connection(Logger logger, String name, Socket socket, Pair<Supplier<DownstreamSDU>, Consumer<UpstreamSDU>> channel) {
 		this.logger = logger; 
 		
-		this.id = id; 
+		this.name = name; 
 		this.socket = socket; 
 		this.downstream = channel.getFirst(); 
 		this.upstream = channel.getSecond(); 
@@ -49,8 +49,8 @@ public class Connection {
 		this.encryptionRequests = new ConcurrentLinkedQueue<>(); 
 	}
 	
-	public int getId() {
-		return this.id; 
+	public String getName() {
+		return this.name;  
 	}
 	
 	public void start() throws IOException {
@@ -60,7 +60,7 @@ public class Connection {
 			UpstreamDisconnectionSDU sdu; 
 			
 			try {
-				this.trace("[RX] Starting RX..."); 
+				this.traceRx("Starting RX..."); 
 				this.runRx();
 				sdu = new UpstreamDisconnectionSDU(); 
 			}
@@ -72,37 +72,37 @@ public class Connection {
 			}
 			
 			if(sdu.getCause() == null) {
-				this.trace("[RX] " + sdu.getReason()); 
+				this.traceRx(sdu.getReason()); 
 			}
 			else {
-				this.trace("[RX] " + sdu.getReason(), sdu.getCause()); 
+				this.traceRx(sdu.getReason(), sdu.getCause()); 
 			}
 			
 			try {
 				this.socket.close(); 
 			}
 			catch(IOException ignored) {
-				this.trace("[RX] Exception while closing socket.", ignored); 
+				this.traceRx("Exception while closing socket.", ignored); 
 			}
 			this.upstream.accept(sdu); 
-			this.trace("[RX] Thread termination."); 
+			this.traceRx("Thread termination."); 
 			
-		}, String.format(RX_TAG, this.id)); 
+		}, String.format(RX_TAG, this.name)); 
 		
 		Thread txThread = new Thread(() -> {
 			
 			try {
-				this.trace("[TX] Starting TX..."); 
+				this.traceTx("Starting TX..."); 
 				this.runTx();
 			} catch (IOException e) {
 				// TODO: shall we ignore this?
-				this.trace("[TX] IO exception in TX", e); 
+				this.traceTx("IO exception in TX", e); 
 			} catch (InterruptedException e) {
-				this.trace("[TX] Interrupted", e); 
+				this.traceTx("Interrupted", e); 
 			}
-			this.trace("[TX] Thread termination."); 
+			this.traceTx("Thread termination."); 
 			
-		}, String.format(TX_TAG, this.id)); 
+		}, String.format(TX_TAG, this.name)); 
 		
 		
 		rxThread.start(); 
@@ -119,19 +119,19 @@ public class Connection {
 		while(true) {
 			DownstreamEncryptSDU encryptionRequest = this.encryptionRequests.poll(); 
 			if(encryptionRequest != null) {
-				this.trace("[RX] Attached decoder cipher");
+				this.traceRx("Attached decoder cipher");
 				decoder.attachCipher(encryptionRequest.getCipher());
 			}
 			Packet packet = null; 
 			while(packet == null) {
 				int data = iStream.read(); 
 				if(data < 0) {
-					this.trace("[RX] Input stream drained");
+					this.traceRx("Input stream drained");
 					return; 
 				}
 				packet = decoder.accept((byte)data); 
 			}
-			this.trace("[RX] Received packet " + packet.toString());
+			this.traceRx("Received packet " + packet.toString());
 			this.upstream.accept(new UpstreamPacketSDU(packet)); 
 		}
 		
@@ -146,10 +146,10 @@ public class Connection {
 		while(true) {
 			DownstreamSDU sdu = this.downstream.get(); 
 			if(sdu == null) {
-				this.trace("[TX] Queue fetch interrupted.");
+				this.traceTx("Queue fetch interrupted.");
 				return; 
 			}
-			this.trace("[TX] Received SDU: " + sdu.toString());
+			this.traceTx("Received SDU: " + sdu.toString());
 			if(sdu instanceof DownstreamDisconnectSDU) return; 
 			if(sdu instanceof DownstreamEncryptSDU) {
 				DownstreamEncryptSDU encryptionRequest = (DownstreamEncryptSDU)sdu; 
@@ -167,14 +167,30 @@ public class Connection {
 		
 	}
 	
-	private synchronized void trace(String message) {
+	private synchronized void traceRaw(String message) {
 		if(this.logger == null) return; 
 		this.logger.info(message);
 	}
 	
-	private synchronized void trace(String message, Throwable cause) {
+	private synchronized void traceRaw(String message, Throwable cause) {
 		if(this.logger == null) return; 
 		this.logger.log(Level.WARNING, message, cause);
+	}
+	
+	private void traceRx(String message) {
+		this.traceRaw("[RX-" + this.name + "] " + message);
+	}
+	
+	private void traceRx(String message, Throwable cause) {
+		this.traceRaw("[RX-" + this.name + "] " + message, cause);
+	}
+	
+	private void traceTx(String message) {
+		this.traceRaw("[TX-" + this.name + "] " + message);
+	}
+	
+	private void traceTx(String message, Throwable cause) {
+		this.traceRaw("[TX-" + this.name + "] " + message, cause);
 	}
 
 }
