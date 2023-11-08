@@ -8,8 +8,8 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import elec366.assignment3.network.packet.Packet;
-import elec366.assignment3.network.packet.PacketDirection;
+import elec366.assignment3.protocol.packet.Packet;
+import elec366.assignment3.protocol.packet.PacketDirection;
 import elec366.assignment3.server.connection.qmh.ConnectionMessage;
 import elec366.assignment3.server.connection.qmh.DisconnectionMessage;
 import elec366.assignment3.server.connection.qmh.LoggingMessage;

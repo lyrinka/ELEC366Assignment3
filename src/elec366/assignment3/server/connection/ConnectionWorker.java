@@ -8,11 +8,11 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-import elec366.assignment3.network.codec.PacketDecoder;
-import elec366.assignment3.network.codec.PacketEncoder;
-import elec366.assignment3.network.codec.exception.PacketDecodeException;
-import elec366.assignment3.network.packet.Packet;
-import elec366.assignment3.network.serdes.exception.PayloadDeserializationException;
+import elec366.assignment3.protocol.codec.PacketDecoder;
+import elec366.assignment3.protocol.codec.PacketEncoder;
+import elec366.assignment3.protocol.codec.exception.PacketDecodeException;
+import elec366.assignment3.protocol.packet.Packet;
+import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 import elec366.assignment3.server.connection.qmh.ConnectionMessage;
 import elec366.assignment3.server.connection.qmh.DisconnectionMessage;
 import elec366.assignment3.server.connection.qmh.EncryptionRequestMessage;

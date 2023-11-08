@@ -1,6 +1,6 @@
 package elec366.assignment3.server.connection.qmh;
 
-import elec366.assignment3.network.packet.Packet;
+import elec366.assignment3.protocol.packet.Packet;
 
 public class PacketMessage extends QueuedMessage {
 

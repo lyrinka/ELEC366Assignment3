@@ -2,7 +2,7 @@ package elec366.assignment3.server.connection.qmh;
 
 import java.util.function.Supplier;
 
-import elec366.assignment3.network.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.StreamCipher;
 
 public class EncryptionRequestMessage extends QueuedMessage {
 

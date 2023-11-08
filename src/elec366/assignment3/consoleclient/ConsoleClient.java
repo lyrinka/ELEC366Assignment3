@@ -7,20 +7,20 @@ import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.Scanner;
 
-import elec366.assignment3.network.codec.PacketDecoder;
-import elec366.assignment3.network.codec.PacketEncoder;
-import elec366.assignment3.network.codec.exception.PacketDecodeException;
-import elec366.assignment3.network.crypto.AsymmetricCrypto;
-import elec366.assignment3.network.crypto.AsymmetricCryptoRSAImpl;
-import elec366.assignment3.network.crypto.StreamCipher;
-import elec366.assignment3.network.crypto.StreamCipherAESImpl;
-import elec366.assignment3.network.packet.Packet;
-import elec366.assignment3.network.packet.impl.PacketInChat;
-import elec366.assignment3.network.packet.impl.PacketInLogin;
-import elec366.assignment3.network.packet.impl.PacketInSetSessionKey;
-import elec366.assignment3.network.packet.impl.PacketOutChat;
-import elec366.assignment3.network.packet.impl.PacketOutSetPublicKey;
-import elec366.assignment3.network.serdes.exception.PayloadDeserializationException;
+import elec366.assignment3.protocol.codec.PacketDecoder;
+import elec366.assignment3.protocol.codec.PacketEncoder;
+import elec366.assignment3.protocol.codec.exception.PacketDecodeException;
+import elec366.assignment3.protocol.crypto.AsymmetricCrypto;
+import elec366.assignment3.protocol.crypto.AsymmetricCryptoRSAImpl;
+import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.StreamCipherAESImpl;
+import elec366.assignment3.protocol.packet.Packet;
+import elec366.assignment3.protocol.packet.impl.PacketInChat;
+import elec366.assignment3.protocol.packet.impl.PacketInLogin;
+import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
+import elec366.assignment3.protocol.packet.impl.PacketOutChat;
+import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
+import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 
 public class ConsoleClient implements Runnable {
 
