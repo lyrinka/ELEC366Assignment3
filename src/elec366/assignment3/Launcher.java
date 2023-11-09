@@ -1,50 +1,76 @@
 package elec366.assignment3;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import elec366.assignment3.network.Connection;
-import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
-import elec366.assignment3.network.sdu.DownstreamSDU;
-import elec366.assignment3.network.sdu.UpstreamSDU;
-import elec366.assignment3.server.ServerConnectionHandler;
+import elec366.assignment3.client.PacketClient;
+import elec366.assignment3.protocol.packet.Packet.In;
+import elec366.assignment3.protocol.packet.Packet.Out;
+import elec366.assignment3.server.PacketServer;
 import elec366.assignment3.util.LoggerUtil;
-import elec366.assignment3.util.Pair;
 
 public class Launcher {
 
 	public static void main(String args[]) throws UnknownHostException, IOException, InterruptedException {
 		
-		Logger logger = LoggerUtil.createLogger("Logger"); 
+		Logger clientNetworkLogger = 	LoggerUtil.createLogger("ClientNetwork"); 
+		Logger clientLogger = 			LoggerUtil.createLogger("Client"); 
+		Logger serverNetworkLogger = 	LoggerUtil.createLogger("ServerNetwork"); 
+		Logger serverLogger = 			LoggerUtil.createLogger("Server"); 
 		
-		ServerConnectionHandler sch = new ServerConnectionHandler(logger, 14567); 
-		sch.start();
+		PacketServer server = new PacketServer(serverLogger, serverNetworkLogger, 14567) {
+
+			@Override
+			public void onConnection(int id) {
+				// TODO Auto-generated method stub
+				this.getLogger().info("[S] Connected " + id); 
+			}
+
+			@Override
+			public void onDisconnection(int id) {
+				// TODO Auto-generated method stub
+				this.getLogger().info("[S] Disconnected " + id); 
+			}
+
+			@Override
+			public void onInboundPacket(int id, In packet) {
+				// TODO Auto-generated method stub
+				this.getLogger().info("[S] Inbound " + packet.toString()); 
+			}
+			
+		}; 
+		
+		server.start();
 		
 		Thread.sleep(1000);
 		
-		Socket socket1 = new Socket("localhost", 14567); 
+		PacketClient client1 = new PacketClient(clientLogger, clientNetworkLogger, "localhost", 14567) {
+
+			@Override
+			public void onConnection() {
+				// TODO Auto-generated method stub
+				this.getLogger().info("[C] Connected"); 
+			}
+			
+			@Override
+			public void onDisconnection() {
+				this.getLogger().info("[C] Disconnected");
+			}
+
+			@Override
+			public void onInboundPacket(Out packet) {
+				// TODO Auto-generated method stub
+				this.getLogger().info("[C] Inbound " + packet.toString()); 
+			}
+			
+		}; 
 		
-		Connection con1 = new Connection(logger, "con1", socket1, new Pair<Supplier<DownstreamSDU>, Consumer<UpstreamSDU>>(
-				() -> {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-					return new DownstreamDisconnectSDU();
-				}, 
-				(sdu) -> {
-					System.out.println(sdu.toString()); 
-				}
-		)); 
-		con1.start();
-		Thread.sleep(1000);
-		socket1.close();
+		client1.start();
+		
+		Thread.sleep(5000);
+		
+		client1.disconnect();
 		
 	}
 

@@ -10,6 +10,10 @@ import java.util.logging.Logger;
 public class LoggerUtil {
 
 	public static Logger createLogger(String tag) {
+		return createLogger(tag, tag); 
+	}
+	
+	public static Logger createLogger(String prefix, String tag) {
 		Logger logger = Logger.getLogger(tag); 
 		logger.setUseParentHandlers(false);
 		logger.addHandler(new ConsoleHandler() {
@@ -20,6 +24,7 @@ public class LoggerUtil {
 					@Override
 					public String format(LogRecord record) {
 						StringBuilder sb = new StringBuilder(); 
+						if(!prefix.isEmpty()) sb.append("[").append(prefix).append("] "); 
 						this.dt.setTime(record.getMillis()); 
 						sb.append("[").append(this.sdf.format(this.dt)).append("] ["); 
 						sb.append(record.getLevel()).append("] ").append(record.getMessage()).append("\n"); 

@@ -65,7 +65,8 @@ public class Connection {
 				sdu = new UpstreamDisconnectionSDU(); 
 			}
 			catch (IOException e) {
-				sdu = new UpstreamDisconnectionSDU("Remote peer closed connection.", e); 
+//				sdu = new UpstreamDisconnectionSDU("Remote peer closed connection.", e); 
+				sdu = new UpstreamDisconnectionSDU(); 
 			}
 			catch (PacketDecodeException | PayloadDeserializationException e) {
 				sdu = new UpstreamDisconnectionSDU("Packet decoding failed.", e); 
@@ -84,7 +85,7 @@ public class Connection {
 			catch(IOException ignored) {
 				this.traceRx("Exception while closing socket.", ignored); 
 			}
-			this.upstream.accept(sdu); 
+			this.sendSDU(sdu); 
 			this.traceRx("Thread termination."); 
 			
 		}, String.format(RX_TAG, this.name)); 
@@ -99,6 +100,13 @@ public class Connection {
 				this.traceTx("IO exception in TX", e); 
 			} catch (InterruptedException e) {
 				this.traceTx("Interrupted", e); 
+			}
+			
+			try {
+				this.socket.close(); 
+			}
+			catch(IOException ignored) {
+				this.traceRx("Exception while closing socket.", ignored); 
 			}
 			this.traceTx("Thread termination."); 
 			
@@ -132,7 +140,7 @@ public class Connection {
 				packet = decoder.accept((byte)data); 
 			}
 			this.traceRx("Received packet " + packet.toString());
-			this.upstream.accept(new UpstreamPacketSDU(packet)); 
+			this.sendSDU(new UpstreamPacketSDU(packet)); 
 		}
 		
 	}
@@ -144,12 +152,12 @@ public class Connection {
 		PacketEncoder encoder = new PacketEncoder(oStream); 
 		
 		while(true) {
-			DownstreamSDU sdu = this.downstream.get(); 
+			DownstreamSDU sdu = this.receiveSDU(); 
 			if(sdu == null) {
 				this.traceTx("Queue fetch interrupted.");
 				return; 
 			}
-			this.traceTx("Received SDU: " + sdu.toString());
+			
 			if(sdu instanceof DownstreamDisconnectSDU) return; 
 			if(sdu instanceof DownstreamEncryptSDU) {
 				DownstreamEncryptSDU encryptionRequest = (DownstreamEncryptSDU)sdu; 
@@ -167,6 +175,18 @@ public class Connection {
 		
 	}
 	
+	private void sendSDU(UpstreamSDU sdu) {
+		this.traceTx("Worker sent SDU: " + sdu.toString());
+		this.upstream.accept(sdu);
+	}
+	
+	private DownstreamSDU receiveSDU() {
+		DownstreamSDU sdu = this.downstream.get(); 
+		if(sdu != null)
+			this.traceTx("Worker received SDU: " + sdu.toString());
+		return sdu; 
+	}
+	
 	private synchronized void traceRaw(String message) {
 		if(this.logger == null) return; 
 		this.logger.info(message);
@@ -175,6 +195,8 @@ public class Connection {
 	private synchronized void traceRaw(String message, Throwable cause) {
 		if(this.logger == null) return; 
 		this.logger.log(Level.WARNING, message, cause);
+		// TODO: do this properly
+		cause.printStackTrace();
 	}
 	
 	private void traceRx(String message) {

@@ -17,11 +17,12 @@ import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
 import elec366.assignment3.network.sdu.DownstreamSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
+import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 import elec366.assignment3.util.Pair;
 
 public class ServerConnectionHandler {
 
-	private static final String TAG = "ConnectionListener"; 
+	private static final String TAG = "ServerConnectionHandler"; 
 	
 	private final Logger logger; 
 	
@@ -81,6 +82,9 @@ public class ServerConnectionHandler {
 	private void runServer() throws IOException {
 		
 		try (ServerSocket listener = new ServerSocket(this.port)) {
+			
+			if(this.logger != null)
+				this.logger.info("[ServerConnection] Started listener on port " + this.port + ".");
 			
 			int connectionID = 0; 
 			
