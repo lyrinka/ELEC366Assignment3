@@ -11,6 +11,7 @@ import elec366.assignment3.protocol.codec.exception.*;
 import elec366.assignment3.protocol.crypto.*;
 import elec366.assignment3.protocol.packet.impl.*;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
+import elec366.assignment3.type.ChatMessageType;
 
 public class ProtocolTest {
 
@@ -68,7 +69,7 @@ public class ProtocolTest {
 			clientEncoder.send(clientTx, new PacketInChat("i found diamonds"));
 			System.out.println(((PacketInChat)serverDecoder.readFullPacket(serverRx)).toString()); 
 			
-			serverEncoder.send(serverTx, new PacketOutChat(PacketOutChat.Type.CHAT_GLOBAL, "i found diamonds"));
+			serverEncoder.send(serverTx, new PacketOutChat(ChatMessageType.CHAT_GLOBAL, "i found diamonds"));
 			System.out.println(((PacketOutChat)clientDecoder.readFullPacket(clientRx)).toString()); 
 			
 		}

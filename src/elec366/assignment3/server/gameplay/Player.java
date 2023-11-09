@@ -5,6 +5,7 @@ import java.util.Objects;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketOutChat;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
+import elec366.assignment3.type.ChatMessageType;
 
 public class Player {
 
@@ -40,12 +41,12 @@ public class Player {
 		this.server.sendSecurePacket(this.connectionID, packet);
 	}
 	
-	public void sendMessage(PacketOutChat.Type type, String message) {
+	public void sendMessage(ChatMessageType type, String message) {
 		this.sendPacket(new PacketOutChat(type, message));
 	}
 	
 	public void sendServerMessage(String message) {
-		this.sendMessage(PacketOutChat.Type.SYSMSG_SERVER, message);
+		this.sendMessage(ChatMessageType.SYSMSG_SERVER, message);
 	}
 	
 	public void updatePlayerlist() {
