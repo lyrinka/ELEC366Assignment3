@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import elec366.assignment3.client.connection.PacketClient;
-import elec366.assignment3.protocol.packet.Packet.In;
-import elec366.assignment3.protocol.packet.Packet.Out;
-import elec366.assignment3.server.connection.PacketServer;
+import elec366.assignment3.client.connection.SecurePacketClient;
+import elec366.assignment3.protocol.packet.Packet; 
+import elec366.assignment3.protocol.packet.impl.PacketInLogin;
+import elec366.assignment3.server.gameplay.MultiplayerServer;
+import elec366.assignment3.server.gameplay.Player;
 import elec366.assignment3.util.LoggerUtil;
 
 public class Launcher {
@@ -19,49 +20,62 @@ public class Launcher {
 		Logger serverNetworkLogger = 	LoggerUtil.createLogger("ServerNetwork"); 
 		Logger serverLogger = 			LoggerUtil.createLogger("Server"); 
 		
-		PacketServer server = new PacketServer(serverLogger, serverNetworkLogger, 14567) {
+		MultiplayerServer server = new MultiplayerServer(serverLogger, serverNetworkLogger, 14567) {
 
 			@Override
-			public void onConnection(int id) {
+			public void onPlayerNameConflict(Player player) {
 				// TODO Auto-generated method stub
-				this.getLogger().info("[S] Connected " + id); 
+				
 			}
 
 			@Override
-			public void onDisconnection(int id) {
+			public boolean onPlayerPreLogin(Player player) {
 				// TODO Auto-generated method stub
-				this.getLogger().info("[S] Disconnected " + id); 
+				return true;
 			}
 
 			@Override
-			public void onInboundPacket(int id, In packet) {
+			public void onPlayerLogin(Player player) {
 				// TODO Auto-generated method stub
-				this.getLogger().info("[S] Inbound " + packet.toString()); 
+				
 			}
-			
+
+			@Override
+			public void onPlayerQuit(Player player) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPlayerChat(Player player, String message) {
+				// TODO Auto-generated method stub
+				
+			}
+
 		}; 
 		
 		server.start();
 		
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		
-		PacketClient client1 = new PacketClient(clientLogger, clientNetworkLogger, "localhost", 14567) {
+		SecurePacketClient client1 = new SecurePacketClient(clientLogger, clientNetworkLogger, "localhost", 14567) {
 
 			@Override
-			public void onConnection() {
-				// TODO Auto-generated method stub
-				this.getLogger().info("[C] Connected"); 
-			}
-			
-			@Override
-			public void onDisconnection() {
-				this.getLogger().info("[C] Disconnected");
+			public void onSecureConnection() {
+				this.sendSecurePacket(new PacketInLogin("user"));
+				
 			}
 
 			@Override
-			public void onOutboundPacket(Out packet) {
+			public void onSecureDisconnection() {
 				// TODO Auto-generated method stub
-				this.getLogger().info("[C] Inbound " + packet.toString()); 
+				
+			}
+
+			@Override
+			public void onSecureOutboundPacket(Packet.Out packet) {
+				// TODO Auto-generated method stub
+				
 			}
 			
 		}; 

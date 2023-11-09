@@ -17,7 +17,7 @@ public class DownstreamPacketSDU extends DownstreamSDU {
 
 	@Override
 	public String toString() {
-		return "DownstreamPacketSDU [packet=" + this.packet + "]";
+		return "DownstreamPacketSDU [packet=" + this.packet.toString() + "]";
 	}
 
 }

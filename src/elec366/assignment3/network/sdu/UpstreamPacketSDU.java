@@ -17,7 +17,7 @@ public class UpstreamPacketSDU extends UpstreamSDU {
 
 	@Override
 	public String toString() {
-		return "UpstreamPacketSDU [packet=" + this.packet + "]";
+		return "UpstreamPacketSDU [packet=" + this.packet.toString() + "]";
 	}
 
 }

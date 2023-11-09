@@ -1,6 +1,6 @@
 package elec366.assignment3.server.connection;
 
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
@@ -45,7 +45,7 @@ public abstract class PacketServer {
 	
 	protected void runServer() {
 		
-		PriorityBlockingQueue<Pair<Integer, UpstreamSDU>> upstream = this.connectionHandler.getUpstream(); 
+		LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> upstream = this.connectionHandler.getUpstream(); 
 		
 		while(true) {
 			Pair<Integer, UpstreamSDU> sduPair;

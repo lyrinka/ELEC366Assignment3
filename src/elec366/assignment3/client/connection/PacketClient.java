@@ -1,6 +1,6 @@
 package elec366.assignment3.client.connection;
 
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
@@ -46,7 +46,7 @@ public abstract class PacketClient {
 	
 	private void runClient() {
 
-		PriorityBlockingQueue<UpstreamSDU> upstream = this.connectionHandler.getUpstream(); 
+		LinkedBlockingQueue<UpstreamSDU> upstream = this.connectionHandler.getUpstream(); 
 		
 		while(true) {
 			UpstreamSDU sdu;

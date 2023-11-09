@@ -19,5 +19,10 @@ public class PacketOutSetPublicKey extends Packet.Out {
 	public byte[] getPublicKey() {
 		return this.getPayload(); 
 	}
+
+	@Override
+	public String toString() {
+		return "PacketOutSetPublicKey []";
+	}
 	
 }

@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -30,17 +30,17 @@ public class ServerConnectionHandler {
 	
 	private final ConcurrentMap<Integer, DownstreamSDUSupplier> clientMap; 
 	
-	private final PriorityBlockingQueue<Pair<Integer, UpstreamSDU>> upstream; 
+	private final LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> upstream; 
 	
 	public ServerConnectionHandler(Logger logger, int port) {
 		this.logger = logger; 
 		
 		this.port = port; 
 		this.clientMap = new ConcurrentHashMap<>(); 
-		this.upstream = new PriorityBlockingQueue<Pair<Integer, UpstreamSDU>>(11, (a, b) -> a.getSecond().compareTo(b.getSecond())); 
+		this.upstream = new LinkedBlockingQueue<Pair<Integer, UpstreamSDU>>(); 
 	}
 	
-	public PriorityBlockingQueue<Pair<Integer, UpstreamSDU>> getUpstream() {
+	public LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> getUpstream() {
 		return this.upstream; 
 	}
 	
@@ -98,7 +98,11 @@ public class ServerConnectionHandler {
 				
 				connection.start();
 				this.clientMap.put(connectionID, dns); 
-				this.upstream.put(new Pair<>(connectionID, new UpstreamConnectionSDU()));
+				try {
+					this.upstream.put(new Pair<>(connectionID, new UpstreamConnectionSDU()));
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e); 
+				}
 				
 				connectionID++; 
 				
@@ -125,23 +129,31 @@ public class ServerConnectionHandler {
 				this.handler.send(new Pair<>(this.connectionID, new DownstreamDisconnectSDU()));
 				this.handler.clientMap.remove(this.connectionID); 
 			}
-			this.handler.upstream.put(new Pair<>(this.connectionID, sdu));
+			try {
+				this.handler.upstream.put(new Pair<>(this.connectionID, sdu));
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e); 
+			}
 		}
 		
 	}
 	
 	private static class DownstreamSDUSupplier implements Consumer<DownstreamSDU>, Supplier<DownstreamSDU> {
 		
-		private final PriorityBlockingQueue<DownstreamSDU> downstream; 
+		private final LinkedBlockingQueue<DownstreamSDU> downstream; 
 		
 		public DownstreamSDUSupplier() {
-			this.downstream = new PriorityBlockingQueue<>(); 
+			this.downstream = new LinkedBlockingQueue<>(); 
 		}
 		
 		@Override
 		public void accept(DownstreamSDU sdu) {
 			if(sdu == null) return; 
-			this.downstream.put(sdu);
+			try {
+				this.downstream.put(sdu);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e); 
+			}
 		}
 		
 		@Override

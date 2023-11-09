@@ -38,4 +38,8 @@ public class PacketInSetSessionKey extends Packet.In {
 		return this.iv; 
 	}
 
+	@Override
+	public String toString() {
+		return "PacketInSetSessionKey []";
+	}
 }

@@ -3,7 +3,7 @@ package elec366.assignment3.client.connection;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -25,7 +25,7 @@ public class ClientConnectionHandler {
 	private final String host; 
 	private final int port; 
 	
-	private final PriorityBlockingQueue<UpstreamSDU> upstream; 
+	private final LinkedBlockingQueue<UpstreamSDU> upstream; 
 	private DownstreamSDUSupplier downstreamSender; 
 	
 	public ClientConnectionHandler(Logger logger, String host, int port) {
@@ -33,10 +33,10 @@ public class ClientConnectionHandler {
 		this.host = host; 
 		this.port = port; 
 		
-		this.upstream = new PriorityBlockingQueue<>(); 
+		this.upstream = new LinkedBlockingQueue<>(); 
 	}
 	
-	public PriorityBlockingQueue<UpstreamSDU> getUpstream() {
+	public LinkedBlockingQueue<UpstreamSDU> getUpstream() {
 		return this.upstream; 
 	}
 	
@@ -67,7 +67,11 @@ public class ClientConnectionHandler {
 		
 		connection.start();
 		this.downstreamSender = dns; 
-		this.upstream.put(new UpstreamConnectionSDU());
+		try {
+			this.upstream.put(new UpstreamConnectionSDU());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e); 
+		}
 		
 	}
 	
@@ -85,23 +89,31 @@ public class ClientConnectionHandler {
 			if(sdu instanceof UpstreamDisconnectionSDU) {
 				this.handler.send(new DownstreamDisconnectSDU());
 			}
-			this.handler.upstream.put(sdu);
+			try {
+				this.handler.upstream.put(sdu);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e); 
+			}
 		}
 		
 	}
 	
 	private static class DownstreamSDUSupplier implements Consumer<DownstreamSDU>, Supplier<DownstreamSDU> {
 		
-		private final PriorityBlockingQueue<DownstreamSDU> downstream; 
+		private final LinkedBlockingQueue<DownstreamSDU> downstream; 
 		
 		public DownstreamSDUSupplier() {
-			this.downstream = new PriorityBlockingQueue<>(); 
+			this.downstream = new LinkedBlockingQueue<>(); 
 		}
 		
 		@Override
 		public void accept(DownstreamSDU sdu) {
 			if(sdu == null) return; 
-			this.downstream.put(sdu);
+			try {
+				this.downstream.put(sdu);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e); 
+			}
 		}
 		
 		@Override
