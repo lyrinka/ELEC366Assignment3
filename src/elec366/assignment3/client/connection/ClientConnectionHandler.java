@@ -46,7 +46,9 @@ public class ClientConnectionHandler {
 			this.startServer();
 		}
 		catch(IOException ex) {
+			// TODO: stop threads properly (refactoring?)
 			this.logger.log(Level.SEVERE, "Unable to start client.", ex); 
+			this.upstream.add(new UpstreamDisconnectionSDU("Unable to start client.", ex)); 
 		}
 
 	}

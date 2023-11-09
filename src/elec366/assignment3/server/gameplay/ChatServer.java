@@ -15,18 +15,26 @@ public class ChatServer extends MultiplayerServer {
 
 	@Override
 	public void onPlayerNameConflict(Player player) {
-		this.sendToPlayerAndConsole(player, ChatMessageType.SYSMSG_SERVER, String.format(ServerResources.SERVER_USERNAME_CONFLICT, player.getName()));
+		String message = String.format(ServerResources.SERVER_USERNAME_CONFLICT, player.getName()); 
+		this.getLogger().info(String.format(ServerResources.SERVER_USER_KICK_PREFIX, player.getName()) + message);
+		player.sendServerMessage(message); 
 	}
 
 	@Override
 	public boolean onPlayerPreLogin(Player player) {
-		String name = player.getName(); 
+		String message = this.playerUsernameCheck(player.getName()); 
+		if(message == null) return true; 
+		this.getLogger().info(String.format(ServerResources.SERVER_USER_KICK_PREFIX, player.getName()) + message);
+		player.sendServerMessage(message); 
+		return false; 
+	}
+	
+	private String playerUsernameCheck(String name) {
 		if(name.length() < ServerSettings.USERNAME_MIN_LEN || name.length() > ServerSettings.USERNAME_MAX_LEN) {
-			this.sendToPlayerAndConsole(player, ChatMessageType.SYSMSG_SERVER, ServerResources.SERVER_USERNAME_LENGTH_VIOLATION);
-			return false; 
+			return ServerResources.SERVER_USERNAME_LENGTH_VIOLATION; 
 		}
 		// TODO: username pattern check
-		return true; 
+		return null; 
 	}
 
 	@Override
@@ -48,16 +56,11 @@ public class ChatServer extends MultiplayerServer {
 
 	@Override
 	public void onPlayerChat(Player player, String message) {
-		String chatMessage = String.format(message, player.getName(), message); 
+		String chatMessage = String.format(ServerResources.SERVER_CHAT_FORMAT, player.getName(), message); 
 		this.broadcastMessage(ChatMessageType.CHAT_GLOBAL, chatMessage);
 		
 	}
-	
-	public void sendToPlayerAndConsole(Player player, ChatMessageType type, String message) {
-		this.getLogger().info(message);
-		player.sendMessage(type, message);
-	}
-	
+
 	public void broadcastMessage(ChatMessageType type, String message) {
 		this.getLogger().info(message);
 		this.getOnlinePlayerStream().forEach(p -> p.sendMessage(type, message));

@@ -2,6 +2,7 @@ package elec366.assignment3.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
@@ -10,7 +11,8 @@ import java.util.logging.Logger;
 public class LoggerUtil {
 
 	public static Logger createLogger(String tag) {
-		return createLogger(tag, tag); 
+		String randomName = tag + "-" + ThreadLocalRandom.current().nextInt(1000000); 
+		return createLogger(tag, randomName); 
 	}
 	
 	public static Logger createLogger(String prefix, String tag) {

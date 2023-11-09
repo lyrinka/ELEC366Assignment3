@@ -2,6 +2,8 @@ package elec366.assignment3.server;
 
 public class ServerResources {
 
+	public static String SERVER_USER_KICK_PREFIX = "%s lost connection: "; 
+	
 	public static String SERVER_USERNAME_CONFLICT = "User with name %s is already online!"; 
 	
 	public static String SERVER_USERNAME_LENGTH_VIOLATION = "Your username is too short or too long!"; 
