@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -36,7 +35,8 @@ public class Connection {
 	private final Supplier<DownstreamSDU> downstream; 
 	private final Consumer<UpstreamSDU> upstream; 
 	
-	private final ConcurrentLinkedQueue<DownstreamEncryptSDU> encryptionRequests; 
+	private PacketEncoder encoder; 
+	private PacketDecoder decoder; 
 	
 	public Connection(Logger logger, String name, Socket socket, Pair<Supplier<DownstreamSDU>, Consumer<UpstreamSDU>> channel) {
 		this.logger = logger; 
@@ -45,8 +45,6 @@ public class Connection {
 		this.socket = socket; 
 		this.downstream = channel.getFirst(); 
 		this.upstream = channel.getSecond(); 
-		
-		this.encryptionRequests = new ConcurrentLinkedQueue<>(); 
 	}
 	
 	public String getName() {
@@ -54,6 +52,9 @@ public class Connection {
 	}
 	
 	public void start() throws IOException {
+		
+		this.encoder = new PacketEncoder(); 
+		this.decoder = new PacketDecoder(); 
 		
 		Thread rxThread = new Thread(() -> {
 			
@@ -122,24 +123,17 @@ public class Connection {
 		
 		InputStream iStream = this.socket.getInputStream(); 
 		
-		PacketDecoder decoder = new PacketDecoder(); 
-		
 		while(true) {
-			DownstreamEncryptSDU encryptionRequest = this.encryptionRequests.poll(); 
-			if(encryptionRequest != null) {
-				this.traceRx("Attached decoder cipher");
-				decoder.attachCipher(encryptionRequest.getCipher());
-			}
 			Packet packet = null; 
 			while(packet == null) {
 				int data = iStream.read(); 
 				if(data < 0) {
-					this.traceRx("Input stream drained");
+					this.traceRx("Input stream drained (connection closed).");
 					return; 
 				}
-				packet = decoder.accept((byte)data); 
+				packet = this.decoder.accept((byte)data); 
 			}
-			this.traceRx("Received packet " + packet.toString());
+			this.traceRx("[Network] Received packet " + packet.toString());
 			this.sendSDU(new UpstreamPacketSDU(packet)); 
 		}
 		
@@ -148,8 +142,6 @@ public class Connection {
 	private void runTx() throws IOException, InterruptedException {
 		
 		OutputStream oStream = this.socket.getOutputStream(); 
-		
-		PacketEncoder encoder = new PacketEncoder(oStream); 
 		
 		while(true) {
 			DownstreamSDU sdu = this.receiveSDU(); 
@@ -162,13 +154,16 @@ public class Connection {
 			if(sdu instanceof DownstreamEncryptSDU) {
 				DownstreamEncryptSDU encryptionRequest = (DownstreamEncryptSDU)sdu; 
 				if(encryptionRequest.getMode() == DownstreamEncryptSDU.Mode.ENCRYPT_ENCODER) 
-					encoder.attachCipher(encryptionRequest.getCipher());
+					this.encoder.attachCipher(encryptionRequest.getCipher());
 				else
-					this.encryptionRequests.add(encryptionRequest); 
+					// TODO: resolve synchronization issues here
+					this.decoder.attachCipher(encryptionRequest.getCipher()); 
 				continue; 
 			}
 			if(sdu instanceof DownstreamPacketSDU) {
-				encoder.send(((DownstreamPacketSDU)sdu).getPacket());
+				Packet packet = ((DownstreamPacketSDU)sdu).getPacket(); 
+				this.encoder.send(oStream, packet);
+				this.traceTx("[Network] Sent packet " + packet.toString());
 				continue; 
 			}
 		}
@@ -176,14 +171,14 @@ public class Connection {
 	}
 	
 	private void sendSDU(UpstreamSDU sdu) {
-		this.traceTx("Worker sent SDU: " + sdu.toString());
+		this.traceRx("[SDU] Worker sent SDU: " + sdu.toString());
 		this.upstream.accept(sdu);
 	}
 	
 	private DownstreamSDU receiveSDU() {
 		DownstreamSDU sdu = this.downstream.get(); 
 		if(sdu != null)
-			this.traceTx("Worker received SDU: " + sdu.toString());
+			this.traceTx("[SDU] Worker received SDU: " + sdu.toString());
 		return sdu; 
 	}
 	

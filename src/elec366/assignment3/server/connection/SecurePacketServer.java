@@ -12,13 +12,14 @@ import elec366.assignment3.protocol.crypto.StreamCipher;
 import elec366.assignment3.protocol.crypto.StreamCipherAESImpl;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
+import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
 import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
 
 public abstract class SecurePacketServer extends PacketServer {
 
 	private static enum SessionState {
 		CONNECTED, 
-		ENCRYPTED, 
+		ESTABLISHED, 
 	}
 	
 	private final Logger logger; 
@@ -64,7 +65,7 @@ public abstract class SecurePacketServer extends PacketServer {
 			this.logger.warning(this.getClientName(id) + " disconnected without being connected. How is this possible?");
 			return; 
 		}
-		if(state == SessionState.ENCRYPTED)
+		if(state == SessionState.ESTABLISHED)
 			this.onSecureDisconnection(id);
 	}
 
@@ -91,12 +92,13 @@ public abstract class SecurePacketServer extends PacketServer {
 					StreamCipher cipher2 = new StreamCipherAESImpl(key, iv); 
 					this.setDecoderEncryption(id, cipher1);
 					this.setEncoderEncryption(id, cipher2);
-					this.sessionMap.put(id, SessionState.ENCRYPTED); 
+					this.sessionMap.put(id, SessionState.ESTABLISHED); 
+					this.sendPacket(id, new PacketOutSessionAck());
 					this.onSecureConnection(id);
 				}
 				break;
 			}
-			case ENCRYPTED: {
+			case ESTABLISHED: {
 				this.onSecureInboundPacket(id, packet);
 				break;
 			}
@@ -111,7 +113,7 @@ public abstract class SecurePacketServer extends PacketServer {
 	public abstract void onSecureInboundPacket(int id, Packet.In packet); 
 	
 	public void sendSecurePacket(int connectionID, Packet.Out packet) {
-		if(this.sessionMap.get(connectionID) == SessionState.ENCRYPTED)
+		if(this.sessionMap.get(connectionID) == SessionState.ESTABLISHED)
 			this.sendPacket(connectionID, packet);
 	}
 	

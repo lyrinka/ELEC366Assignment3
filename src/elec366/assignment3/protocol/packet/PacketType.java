@@ -8,6 +8,7 @@ import elec366.assignment3.protocol.packet.impl.PacketInQueryPlayerList;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
 import elec366.assignment3.protocol.packet.impl.PacketOutChat;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
+import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
 import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
 
 public interface PacketType {
@@ -58,6 +59,7 @@ public interface PacketType {
 	enum OUT implements PacketType {
 		
 		SET_PUBLIC_KEY	(0x00, PacketOutSetPublicKey.class), 
+		SESSION_ACK		(0x01, PacketOutSessionAck.class), 
 		CHAT			(0x02, PacketOutChat.class), 
 		PLAYER_LIST		(0x03, PacketOutPlayerList.class), 
 		;

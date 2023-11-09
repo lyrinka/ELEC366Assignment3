@@ -9,12 +9,9 @@ import elec366.assignment3.protocol.packet.PacketDirection;
 
 public class PacketEncoder implements Cipherable {
 	
-	private final OutputStream oStream; 
-	
 	private StreamCipher cipher; 
 	
-	public PacketEncoder(OutputStream oStream) {
-		this.oStream = oStream; 
+	public PacketEncoder() {
 		this.cipher = null; 
 	}
 	
@@ -33,29 +30,29 @@ public class PacketEncoder implements Cipherable {
 		return this.cipher != null; 
 	}
 	
-	public void send(Packet packet) throws IOException {
+	public void send(OutputStream oStream, Packet packet) throws IOException {
 		int header = packet.getDirection() == PacketDirection.IN ? 0x80 : 0x00; 
 		header |= packet.getType().getPacketID() & 0x7F; 
 		byte[] payload = packet.getPayload(); 
 		int length = payload.length; 
 		
-		this.write(length >> 24);
-		this.write(length >> 16);
-		this.write(length >> 8);
-		this.write(length);
-		this.write(header);
+		this.write(oStream, length >> 24);
+		this.write(oStream, length >> 16);
+		this.write(oStream, length >> 8);
+		this.write(oStream, length);
+		this.write(oStream, header);
 		for(byte b : payload)
-			this.write(b);
+			this.write(oStream, b);
 	}
 	
-	private void write(int b) throws IOException {
-		this.write((byte)b);
+	private void write(OutputStream oStream, int b) throws IOException {
+		this.write(oStream, (byte)b);
 	}
 	
-	private void write(byte b) throws IOException {
+	private void write(OutputStream oStream, byte b) throws IOException {
 		if(this.cipher != null) 
 			b = this.cipher.encrypt(b); 
-		this.oStream.write(b);
+		oStream.write(b);
 	}
 	
 }

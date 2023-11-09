@@ -9,6 +9,7 @@ import elec366.assignment3.protocol.crypto.StreamCipher;
 import elec366.assignment3.protocol.crypto.StreamCipherAESImpl;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
+import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
 import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
 
 public abstract class SecurePacketClient extends PacketClient {
@@ -17,6 +18,7 @@ public abstract class SecurePacketClient extends PacketClient {
 		DISCONNECTED, 
 		CONNECTED, 
 		ENCRYPTED, 
+		ESTABLISHED, 
 	}
 	
 	private final Logger logger; 
@@ -40,10 +42,10 @@ public abstract class SecurePacketClient extends PacketClient {
 
 	@Override
 	public void onDisconnection() {
-		if(this.sessionState == SessionState.ENCRYPTED) {
-			this.sessionState = SessionState.DISCONNECTED; 
+		if(this.sessionState == SessionState.ESTABLISHED) {
 			this.onSecureDisconnection(); 
 		}
+		this.sessionState = SessionState.DISCONNECTED; 
 	}
 
 	@Override
@@ -54,7 +56,7 @@ public abstract class SecurePacketClient extends PacketClient {
 				return; 
 			case CONNECTED: {
 				if(!(packet instanceof PacketOutSetPublicKey)) {
-					this.logger.warning("Server sent an unexpected packet during session establishment flow.");
+					this.logger.warning("Server sent an unexpected packet during session establishment flow. (1)");
 					this.disconnect();
 				}
 				else {
@@ -73,11 +75,20 @@ public abstract class SecurePacketClient extends PacketClient {
 					this.setDecoderEncryption(cipher1);
 					this.setEncoderEncryption(cipher2);
 					this.sessionState = SessionState.ENCRYPTED; 
-					this.onSecureConnection(); 
+					
 				}
 				break;
 			}
 			case ENCRYPTED: {
+				if(!(packet instanceof PacketOutSessionAck)) {
+					this.logger.warning("Server sent an unexpected packet during session establishment flow. (2)");
+					this.disconnect();
+				}
+				this.sessionState = SessionState.ESTABLISHED; 
+				this.onSecureConnection(); 
+				break; 
+			}
+			case ESTABLISHED: {
 				this.onSecureOutboundPacket(packet); 
 				break;
 			}
@@ -91,7 +102,7 @@ public abstract class SecurePacketClient extends PacketClient {
 	public abstract void onSecureOutboundPacket(Packet.Out packet); 
 	
 	public void sendSecurePacket(Packet.In packet) {
-		if(this.sessionState == SessionState.ENCRYPTED)
+		if(this.sessionState == SessionState.ESTABLISHED)
 			this.sendPacket(packet);
 	}
 

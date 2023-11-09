@@ -23,17 +23,17 @@ public class ProtocolTest {
 			PipedInputStream clientRx = new PipedInputStream(serverTx); 
 			
 			// Server codec
-			PacketEncoder serverEncoder = new PacketEncoder(serverTx); 
+			PacketEncoder serverEncoder = new PacketEncoder(); 
 			PacketDecoder serverDecoder = new PacketDecoder(); 
 			
 			// Client codec
-			PacketEncoder clientEncoder = new PacketEncoder(clientTx); 
+			PacketEncoder clientEncoder = new PacketEncoder(); 
 			PacketDecoder clientDecoder = new PacketDecoder(); 
 			
 			// Server side
 			AsymmetricCrypto asc = new AsymmetricCryptoRSAImpl(); 
 			KeyPair serverKeypair = asc.generateKeypair(); 
-			serverEncoder.send(new PacketOutSetPublicKey(serverKeypair.getPublic())); 
+			serverEncoder.send(serverTx, new PacketOutSetPublicKey(serverKeypair.getPublic())); 
 			
 			// Client side
 			byte[] clientPublicKey = ((PacketOutSetPublicKey)clientDecoder.readFullPacket(clientRx)).getPublicKey(); 
@@ -45,7 +45,7 @@ public class ProtocolTest {
 			StreamCipher clientCipher = new StreamCipherAESImpl(clientKey, clientIV); 
 			clientKey = asc.encrypt(clientKey, clientPublicKey); 
 			clientIV = asc.encrypt(clientIV, clientPublicKey); 
-			clientEncoder.send(new PacketInSetSessionKey(clientKey, clientIV));
+			clientEncoder.send(clientTx, new PacketInSetSessionKey(clientKey, clientIV));
 			clientEncoder.attachCipher(clientCipher);
 			
 			// Server side
@@ -56,19 +56,19 @@ public class ProtocolTest {
 			serverDecoder.attachCipher(serverCipher);
 			
 			// Normal communication follows
-			clientEncoder.send(new PacketInLogin("steve"));
+			clientEncoder.send(clientTx, new PacketInLogin("steve"));
 			System.out.println(((PacketInLogin)serverDecoder.readFullPacket(serverRx)).toString()); 
 			
-			clientEncoder.send(new PacketInQueryPlayerList());
+			clientEncoder.send(clientTx, new PacketInQueryPlayerList());
 			System.out.println(((PacketInQueryPlayerList)serverDecoder.readFullPacket(serverRx)).toString()); 
 			
-			serverEncoder.send(new PacketOutPlayerList(new String[] {"alex", "steve"}));
+			serverEncoder.send(serverTx, new PacketOutPlayerList(new String[] {"alex", "steve"}));
 			System.out.println(((PacketOutPlayerList)clientDecoder.readFullPacket(clientRx)).toString()); 
 			
-			clientEncoder.send(new PacketInChat("i found diamonds"));
+			clientEncoder.send(clientTx, new PacketInChat("i found diamonds"));
 			System.out.println(((PacketInChat)serverDecoder.readFullPacket(serverRx)).toString()); 
 			
-			serverEncoder.send(new PacketOutChat(PacketOutChat.Type.CHAT_GLOBAL, "i found diamonds"));
+			serverEncoder.send(serverTx, new PacketOutChat(PacketOutChat.Type.CHAT_GLOBAL, "i found diamonds"));
 			System.out.println(((PacketOutChat)clientDecoder.readFullPacket(clientRx)).toString()); 
 			
 		}
