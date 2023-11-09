@@ -39,9 +39,9 @@ public abstract class MultiplayerServer extends SecurePacketServer {
 		}
 		if(!oPlayer.isPresent()) return; 
 		Player player = oPlayer.get(); 
+		this.playerMap.remove(id); // TODO: where to removing this?
 		this.onPlayerQuit(player); 
 		this.broadcastPlayerListChange(); 
-		this.playerMap.remove(id); 
 	}
 
 	@Override
@@ -131,6 +131,14 @@ public abstract class MultiplayerServer extends SecurePacketServer {
 	
 	public int getOnlinePlayerCount() {
 		return (int) this.getOnlinePlayerStream().count(); 
+	}
+	
+	@Override
+	protected String getClientName(int id) {
+		Optional<Player> oPlayer = this.playerMap.get(id); 
+		if(!oPlayer.isPresent()) return super.getClientName(id); 
+		Player player = oPlayer.get(); 
+		return String.format("Player %s (%d) ", player.getName(), player.getConnectionID()); 
 	}
 
 }
