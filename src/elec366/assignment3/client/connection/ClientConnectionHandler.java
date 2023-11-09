@@ -1,4 +1,4 @@
-package elec366.assignment3.client;
+package elec366.assignment3.client.connection;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import elec366.assignment3.client.PacketClient;
+import elec366.assignment3.client.connection.PacketClient;
 import elec366.assignment3.protocol.packet.Packet.In;
 import elec366.assignment3.protocol.packet.Packet.Out;
-import elec366.assignment3.server.PacketServer;
+import elec366.assignment3.server.connection.PacketServer;
 import elec366.assignment3.util.LoggerUtil;
 
 public class Launcher {

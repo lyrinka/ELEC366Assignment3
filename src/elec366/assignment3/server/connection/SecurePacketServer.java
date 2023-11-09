@@ -1,4 +1,4 @@
-package elec366.assignment3.server;
+package elec366.assignment3.server.connection;
 
 import java.security.KeyPair;
 import java.util.HashMap;

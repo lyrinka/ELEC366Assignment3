@@ -1,4 +1,4 @@
-package elec366.assignment3.client;
+package elec366.assignment3.client.connection;
 
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Logger;
