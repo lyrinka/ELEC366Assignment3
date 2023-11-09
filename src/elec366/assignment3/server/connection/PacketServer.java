@@ -13,6 +13,7 @@ import elec366.assignment3.network.sdu.UpstreamSDU;
 import elec366.assignment3.protocol.crypto.StreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
+import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
 import elec366.assignment3.util.Pair;
 
 public abstract class PacketServer {
@@ -43,6 +44,10 @@ public abstract class PacketServer {
 		
 	}
 	
+	public void stop() {
+		this.connectionHandler.stop(); 
+	}
+	
 	protected void runServer() {
 		
 		LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> upstream = this.connectionHandler.getUpstream(); 
@@ -57,6 +62,9 @@ public abstract class PacketServer {
 			int connectionID =  sduPair.getFirst(); 
 			UpstreamSDU sdu = sduPair.getSecond(); 
 			
+			if(sdu instanceof UpstreamServerQuitSDU) {
+				break; 
+			}
 			if(sdu instanceof UpstreamDisconnectionSDU) {
 				this.onDisconnection(connectionID);
 				continue; 
@@ -81,7 +89,10 @@ public abstract class PacketServer {
 				this.onInboundPacket(connectionID, (Packet.In)packet);
 				continue; 
 			}
+			
 		}
+		
+		this.onServerQuit(); 
 		
 	}
 
@@ -90,6 +101,8 @@ public abstract class PacketServer {
 	public abstract void onDisconnection(int id); 
 	
 	public abstract void onInboundPacket(int id, Packet.In packet); 
+	
+	public abstract void onServerQuit(); 
 	
 	public void setDecoderEncryption(int connectionID, StreamCipher cipher) {
 		this.connectionHandler.send(connectionID, new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_DECODER));

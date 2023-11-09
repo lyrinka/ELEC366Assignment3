@@ -56,6 +56,10 @@ public class ChatServer extends MultiplayerServer {
 
 	@Override
 	public void onPlayerChat(Player player, String message) {
+		if(message.equals("/stop")) {
+			this.stop(); 
+			return; 
+		}
 		String chatMessage = String.format(ServerResources.SERVER_CHAT_FORMAT, player.getName(), message); 
 		this.broadcastMessage(ChatMessageType.CHAT_GLOBAL, chatMessage);
 		

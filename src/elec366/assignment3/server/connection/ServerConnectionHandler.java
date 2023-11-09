@@ -3,6 +3,7 @@ package elec366.assignment3.server.connection;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -18,6 +19,7 @@ import elec366.assignment3.network.sdu.DownstreamSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
+import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
 import elec366.assignment3.util.Pair;
 
 public class ServerConnectionHandler {
@@ -31,6 +33,8 @@ public class ServerConnectionHandler {
 	private final ConcurrentMap<Integer, DownstreamSDUSupplier> clientMap; 
 	
 	private final LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> upstream; 
+	
+	private Runnable closureCallback; 
 	
 	public ServerConnectionHandler(Logger logger, int port) {
 		this.logger = logger; 
@@ -61,12 +65,18 @@ public class ServerConnectionHandler {
 			}
 			catch(IOException ex) {
 				this.logger.log(Level.SEVERE, "Unable to start server.", ex);
+				this.stopUpstream(); 
 			}
 			
 		}, TAG); 
 		
 		serverThread.start(); 
 		
+	}
+	
+	public void stop() {
+		if(this.closureCallback != null)
+			this.closureCallback.run(); 
 	}
 	
 	public void send(int connectionID, DownstreamSDU sdu) {
@@ -83,6 +93,14 @@ public class ServerConnectionHandler {
 		
 		try (ServerSocket listener = new ServerSocket(this.port)) {
 			
+			this.closureCallback = () -> {
+				try {
+					listener.close();
+				} catch (IOException ignored) {
+					
+				} 
+			}; 
+			
 			if(this.logger != null)
 				this.logger.info("[ServerConnection] Started listener on port " + this.port + ".");
 			
@@ -90,7 +108,18 @@ public class ServerConnectionHandler {
 			
 			while(true) {
 				
-				Socket socket = listener.accept(); 
+				Socket socket; 
+				try {
+					socket = listener.accept(); 
+				}
+				catch(IOException ex) {
+					if(ex instanceof SocketException) {
+						if(!ex.getMessage().equals("Socket closed")) 
+							ex.printStackTrace();
+						break; 
+					}
+					throw ex; 
+				}
 				
 				UpstreamSDUConsumer ups = new UpstreamSDUConsumer(this, connectionID); 
 				DownstreamSDUSupplier dns = new DownstreamSDUSupplier(); 
@@ -108,8 +137,21 @@ public class ServerConnectionHandler {
 				
 			}
 			
+			listener.close();
+			
+			this.clientMap.values().forEach(c -> c.accept(new DownstreamDisconnectSDU()));
+			
+			if(this.logger != null)
+				this.logger.info("[ServerConnection] Server listener closed.");
+			
+			this.stopUpstream(); 
+			
 		}
 		
+	}
+	
+	private void stopUpstream() {
+		this.upstream.add(new Pair<>(-1, new UpstreamServerQuitSDU())); 
 	}
 	
 	private static class UpstreamSDUConsumer implements Consumer<UpstreamSDU> {

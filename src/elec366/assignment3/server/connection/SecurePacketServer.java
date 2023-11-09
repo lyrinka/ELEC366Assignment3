@@ -106,6 +106,11 @@ public abstract class SecurePacketServer extends PacketServer {
 		
 	}
 	
+	@Override
+	public void onServerQuit() {
+		this.logger.info("Server stopped.");
+	}
+
 	public abstract void onSecureConnection(int id); 
 	
 	public abstract void onSecureDisconnection(int id); 

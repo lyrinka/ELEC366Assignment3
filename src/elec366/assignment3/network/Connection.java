@@ -51,7 +51,7 @@ public class Connection {
 		return this.name;  
 	}
 	
-	public void start() throws IOException {
+	public void start() {
 		
 		this.encoder = new PacketEncoder(); 
 		this.decoder = new PacketDecoder(); 
@@ -66,7 +66,6 @@ public class Connection {
 				sdu = new UpstreamDisconnectionSDU(); 
 			}
 			catch (IOException e) {
-//				sdu = new UpstreamDisconnectionSDU("Remote peer closed connection.", e); 
 				sdu = new UpstreamDisconnectionSDU(); 
 			}
 			catch (PacketDecodeException | PayloadDeserializationException e) {
