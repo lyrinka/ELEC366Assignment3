@@ -22,7 +22,7 @@ public abstract class PacketServer {
 	private final Logger serverLogger; 
 	private final Logger networkLogger; 
 
-	private final int port; 
+	protected final int port; 
 	private ServerConnectionHandler connectionHandler;
 	
 	public PacketServer(Logger serverLogger, Logger networkLogger, int port) {
@@ -43,7 +43,7 @@ public abstract class PacketServer {
 		
 	}
 	
-	private void runServer() {
+	protected void runServer() {
 		
 		PriorityBlockingQueue<Pair<Integer, UpstreamSDU>> upstream = this.connectionHandler.getUpstream(); 
 		
@@ -66,7 +66,8 @@ public abstract class PacketServer {
 				continue; 
 			}
 			if(sdu instanceof UpstreamLoggingSDU) {
-				((UpstreamLoggingSDU)sdu).logAsInfo(this.serverLogger);
+				if(this.serverLogger != null)
+					((UpstreamLoggingSDU)sdu).logAsInfo(this.serverLogger);
 				continue; 
 			}
 			if(sdu instanceof UpstreamPacketSDU) {

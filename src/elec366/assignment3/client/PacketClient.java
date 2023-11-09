@@ -21,8 +21,8 @@ public abstract class PacketClient {
 	private final Logger clientLogger;
 	private final Logger networkLogger;
 
-	private final String host;
-	private final int port;
+	protected final String host;
+	protected final int port;
 	private ClientConnectionHandler connectionHandler; 
 
 	public PacketClient(Logger serverLogger, Logger networkLogger, String host, int port) {
@@ -65,7 +65,8 @@ public abstract class PacketClient {
 				continue; 
 			}
 			if(sdu instanceof UpstreamLoggingSDU) {
-				((UpstreamLoggingSDU)sdu).logAsWarning(this.clientLogger);
+				if(this.clientLogger != null)
+					((UpstreamLoggingSDU)sdu).logAsWarning(this.clientLogger);
 				continue; 
 			}
 			if(sdu instanceof UpstreamPacketSDU) {
@@ -76,7 +77,7 @@ public abstract class PacketClient {
 					this.disconnect(); 
 					continue; 
 				}
-				this.onInboundPacket((Packet.Out)packet); 
+				this.onOutboundPacket((Packet.Out)packet); 
 				continue; 
 			}
 		}
@@ -87,7 +88,7 @@ public abstract class PacketClient {
 	
 	public abstract void onDisconnection(); 
 	
-	public abstract void onInboundPacket(Packet.Out packet); 
+	public abstract void onOutboundPacket(Packet.Out packet); 
 
 	public void setDecoderEncryption(StreamCipher cipher) {
 		this.connectionHandler.send(new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_DECODER));
@@ -97,7 +98,7 @@ public abstract class PacketClient {
 		this.connectionHandler.send(new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_ENCODER));
 	}
 	
-	public void sendPacket(Packet.Out packet) {
+	public void sendPacket(Packet.In packet) {
 		this.connectionHandler.send(new DownstreamPacketSDU(packet));
 	}
 	

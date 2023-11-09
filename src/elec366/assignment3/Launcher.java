@@ -59,7 +59,7 @@ public class Launcher {
 			}
 
 			@Override
-			public void onInboundPacket(Out packet) {
+			public void onOutboundPacket(Out packet) {
 				// TODO Auto-generated method stub
 				this.getLogger().info("[C] Inbound " + packet.toString()); 
 			}
