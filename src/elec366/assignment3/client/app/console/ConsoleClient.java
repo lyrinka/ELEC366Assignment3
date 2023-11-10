@@ -9,16 +9,17 @@ import elec366.assignment3.util.LoggerUtil;
 
 public class ConsoleClient extends ChatClient {
 
-	private Thread consoleInputThread;
+	private final ConsoleInputThread consoleInputThread;
 
 	public ConsoleClient(String username) {
 		super(LoggerUtil.createLogger("Client"), LoggerUtil.createLogger("Tracer"), "localhost", 14567, username);
+		this.consoleInputThread = new ConsoleInputThread(this); 
 	}
 
 	@Override
 	public void onChatServerConnection() {
 		System.out.println("> Connected");
-		this.startConsoleInputThread();
+		this.consoleInputThread.start();
 	}
 
 	@Override
@@ -34,26 +35,54 @@ public class ConsoleClient extends ChatClient {
 	@Override
 	public void onChatServerDisconnection() {
 		System.out.println("> Disconnected");
-		// TODO: terminate scanner thread properly?
-//		if (this.consoleInputThread != null)
-//			this.consoleInputThread.interrupt();
+		this.consoleInputThread.exit();
 	}
-
-	private void startConsoleInputThread() {
-		this.consoleInputThread = new Thread(this::runConsoleInputThread);
-		this.consoleInputThread.start();
-	}
-
-	private void runConsoleInputThread() {
-		try (Scanner scanner = new Scanner(System.in)) {
-			while (true) {
-				String message = scanner.nextLine();
-				if (message.equals("/exit"))
-					break;
-				this.sendChatMessage(message);
-			}
+	
+	@Override
+	public void sendChatMessage(String message) {
+		if(message.equals("/logout")) {
+			this.disconnect(); 
+			return; 
 		}
-		this.disconnect();
+		super.sendChatMessage(message);
+	}
+
+	private static class ConsoleInputThread extends Thread {
+		
+		private final ConsoleClient client; 
+		
+		private boolean exit; 
+		
+		public ConsoleInputThread(ConsoleClient client) {
+			this.client = client; 
+			this.exit = false; 
+		}
+		
+		@Override
+		public void run() {
+			
+			try (Scanner scanner = new Scanner(System.in)) {
+				while (true) {
+					if(!scanner.hasNextLine()) {
+						try {
+							if(this.exit) break; 
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+							break; 
+						}
+						continue; 
+					}
+					String message = scanner.nextLine();
+					this.client.sendChatMessage(message);
+				}
+			}
+			this.client.disconnect();
+		}
+		
+		public void exit() {
+			this.exit = true; 
+		}
+		
 	}
 	
 }

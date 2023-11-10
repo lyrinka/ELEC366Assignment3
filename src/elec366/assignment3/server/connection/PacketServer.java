@@ -44,7 +44,7 @@ public abstract class PacketServer {
 		
 	}
 	
-	public void stop() {
+	public void shutdown() {
 		this.connectionHandler.stop(); 
 	}
 	
@@ -52,44 +52,52 @@ public abstract class PacketServer {
 		
 		LinkedBlockingQueue<Pair<Integer, UpstreamSDU>> upstream = this.connectionHandler.getUpstream(); 
 		
-		while(true) {
-			Pair<Integer, UpstreamSDU> sduPair;
-			try {
-				sduPair = upstream.take();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e); 
-			} 
-			int connectionID =  sduPair.getFirst(); 
-			UpstreamSDU sdu = sduPair.getSecond(); 
+		try {
 			
-			if(sdu instanceof UpstreamServerQuitSDU) {
-				break; 
-			}
-			if(sdu instanceof UpstreamDisconnectionSDU) {
-				this.onDisconnection(connectionID);
-				continue; 
-			}
-			if(sdu instanceof UpstreamConnectionSDU) {
-				this.onConnection(connectionID);
-				continue; 
-			}
-			if(sdu instanceof UpstreamLoggingSDU) {
-				if(this.serverLogger != null)
-					((UpstreamLoggingSDU)sdu).logAsInfo(this.serverLogger);
-				continue; 
-			}
-			if(sdu instanceof UpstreamPacketSDU) {
-				Packet packet = ((UpstreamPacketSDU)sdu).getPacket(); 
-				if(!(packet instanceof Packet.In)) {
-					if(this.serverLogger != null)
-						this.serverLogger.warning("[PacketServer] " + this.getClientName(connectionID) + " sent an outbound packet. How is this possible?"); 
-					this.disconnect(connectionID);
+			while(true) {
+				Pair<Integer, UpstreamSDU> sduPair;
+				try {
+					sduPair = upstream.take();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e); 
+				} 
+				int connectionID =  sduPair.getFirst(); 
+				UpstreamSDU sdu = sduPair.getSecond(); 
+				
+				if(sdu instanceof UpstreamServerQuitSDU) {
+					break; 
+				}
+				if(sdu instanceof UpstreamDisconnectionSDU) {
+					this.onDisconnection(connectionID);
 					continue; 
 				}
-				this.onInboundPacket(connectionID, (Packet.In)packet);
-				continue; 
+				if(sdu instanceof UpstreamConnectionSDU) {
+					this.onConnection(connectionID);
+					continue; 
+				}
+				if(sdu instanceof UpstreamLoggingSDU) {
+					if(this.serverLogger != null)
+						((UpstreamLoggingSDU)sdu).logAsInfo(this.serverLogger);
+					continue; 
+				}
+				if(sdu instanceof UpstreamPacketSDU) {
+					Packet packet = ((UpstreamPacketSDU)sdu).getPacket(); 
+					if(!(packet instanceof Packet.In)) {
+						if(this.serverLogger != null)
+							this.serverLogger.warning("[PacketServer] " + this.getClientName(connectionID) + " sent an outbound packet. How is this possible?"); 
+						this.disconnect(connectionID);
+						continue; 
+					}
+					this.onInboundPacket(connectionID, (Packet.In)packet);
+					continue; 
+				}
+				
 			}
 			
+		}
+		catch(Throwable e) {
+			this.shutdown();
+			throw e; 
 		}
 		
 		this.onServerQuit(); 

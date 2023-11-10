@@ -59,7 +59,7 @@ public class UpstreamLoggingSDU extends UpstreamSDU {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " [" + this.message + ", " + (this.cause != null ? "cause= " + this.cause : "") + "]";
+		return this.getClass().getSimpleName() + " [" + this.message + (this.cause != null ? ", cause= " + this.cause : "") + "]";
 	}
 
 }
