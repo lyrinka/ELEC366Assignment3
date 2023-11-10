@@ -1,5 +1,9 @@
 package elec366.assignment1.client;
 
-public class ClientConnection {
+import javax.swing.JFrame;
 
+
+public class ClientConnection {
+	
+	
 }
