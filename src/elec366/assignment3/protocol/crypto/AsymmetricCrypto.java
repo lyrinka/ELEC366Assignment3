@@ -6,6 +6,10 @@ import java.security.PublicKey;
 
 public interface AsymmetricCrypto {
 	
+	public static AsymmetricCrypto get() {
+		return new AsymmetricCryptoRSAImpl(); 
+	}
+	
 	public KeyPair generateKeypair(); 
 	
 	public byte[] decrypt(byte[] data, PrivateKey privateKey); 

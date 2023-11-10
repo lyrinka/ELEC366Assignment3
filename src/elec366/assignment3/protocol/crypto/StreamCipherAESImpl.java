@@ -20,7 +20,7 @@ public class StreamCipherAESImpl implements StreamCipher {
 	private final byte[] decryptBuffer1 = new byte[1]; 
 	private final byte[] decryptBuffer2 = new byte[1]; 
 	
-	public StreamCipherAESImpl(byte[] key, byte[] iv) {
+	StreamCipherAESImpl(byte[] key, byte[] iv) {
 		try {
 			SecretKeySpec keyObj = new SecretKeySpec(key, "AES"); 
 			IvParameterSpec ivObj = new IvParameterSpec(iv); 

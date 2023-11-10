@@ -7,9 +7,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import elec366.assignment3.protocol.crypto.AsymmetricCrypto;
-import elec366.assignment3.protocol.crypto.AsymmetricCryptoRSAImpl;
 import elec366.assignment3.protocol.crypto.StreamCipher;
-import elec366.assignment3.protocol.crypto.StreamCipherAESImpl;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
 import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
@@ -36,7 +34,7 @@ public abstract class SecurePacketServer extends PacketServer {
 		this.sessionMap = new HashMap<>(); 
 		
 		this.logger.info("Generating keypair..");
-		this.asc = new AsymmetricCryptoRSAImpl(); 
+		this.asc = AsymmetricCrypto.get(); 
 		this.keypair = this.asc.generateKeypair(); 
 		this.logger.info("Keypair generated.");
 	}
@@ -88,8 +86,8 @@ public abstract class SecurePacketServer extends PacketServer {
 					PacketInSetSessionKey packet0 = (PacketInSetSessionKey)packet; 
 					byte[] key = this.asc.decrypt(packet0.getKey(), this.keypair.getPrivate()); 
 					byte[] iv  = this.asc.decrypt(packet0.getIv(),	this.keypair.getPrivate()); 
-					StreamCipher cipher1 = new StreamCipherAESImpl(key, iv); 
-					StreamCipher cipher2 = new StreamCipherAESImpl(key, iv); 
+					StreamCipher cipher1 = StreamCipher.get(key, iv); 
+					StreamCipher cipher2 = StreamCipher.get(key, iv); 
 					this.setDecoderEncryption(id, cipher1);
 					this.setEncoderEncryption(id, cipher2);
 					this.sessionMap.put(id, SessionState.ESTABLISHED); 
