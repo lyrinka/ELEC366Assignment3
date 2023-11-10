@@ -17,6 +17,10 @@ import javax.crypto.NoSuchPaddingException;
 
 public class AsymmetricCryptoRSAImpl implements AsymmetricCrypto {
 	
+	AsymmetricCryptoRSAImpl() {
+		
+	}
+	
 	@Override
 	public KeyPair generateKeypair() {
 		try {
