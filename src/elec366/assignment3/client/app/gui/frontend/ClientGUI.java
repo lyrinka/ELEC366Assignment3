@@ -29,28 +29,36 @@ public class ClientGUI implements IClientGUI {
 	private Runnable onSendButtonCallback; 
 	
 	public ClientGUI() {
+		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 500, 500);
+		frame.setBounds(100, 100, 500, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Chatting Client");
 		frame.getContentPane().setLayout(null);
 		
-		labelClientName = new JLabel(""); 
+		
+		labelClientName = new JLabel("Client Name: "); 
 		labelClientName.setBounds(10, 50, 300, 30);
 		labelClientName.setFont(new Font("Times", Font.BOLD, 12));
 		labelClientName.setHorizontalAlignment(SwingConstants.LEFT);
 		labelClientName.setVerticalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(labelClientName);
-		labelClientName.setText("Client Name: ");
+		
 		
 		textfieldClientName = new JTextField();
 		textfieldClientName.setFont(new Font("Times", Font.BOLD, 12));
 		textfieldClientName.setBounds(100, 55, 120, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldClientName);
 		
+		
 		buttonconnect = new JButton("Connect");
 		buttonconnect.setBounds(230, 55, 100, 20);// x axis, y axis, width, height
+		buttonconnect.addActionListener(ignored -> {
+			if(this.onConnectionButtonCallback == null) return; 
+			this.onConnectionButtonCallback.run(); 
+		});
 		frame.getContentPane().add(buttonconnect);
+		
 		
 		textAreaDisplay = new JTextArea();
 		textAreaDisplay.setBounds(10, 90, 350, 300);
@@ -58,52 +66,41 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().repaint(); 
 		textAreaDisplay.setEditable(false); //It is still staying editable....
 		
-		buttonconnect.addActionListener(ignored -> {
-			if(this.onConnectionButtonCallback == null) return; 
-			this.onConnectionButtonCallback.run(); 
-		});
-		
-	
-		
-		
 		
 		//need to use the users entered name here
-		
 		//Set up an if connected function the following appears, If not connected the above appears
-		
-		labelSend = new JLabel(""); 
+		labelSend = new JLabel("Send to: "); 
 		labelSend.setBounds(10, 390, 300, 30);
 		labelSend.setFont(new Font("Times", Font.BOLD, 12));
 		labelSend.setHorizontalAlignment(SwingConstants.LEFT);
 		labelSend.setVerticalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(labelSend);
-		labelSend.setText("Send to: ");
+		
 		
 		//Create the array or arrays and convert it to strings so it can be added to the combo box
-		
 		//an example to see it works
-		
 		names = new JComboBox<String>(); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
 		names.setBounds(80, 390, 300, 30);
 		names.setFont(new Font("Times", Font.BOLD, 12));
 		frame.getContentPane().add(names);
 		
+		
 		textAreaSend = new JTextArea();
 		textAreaSend.setBounds(10, 430, 300, 80);
 		frame.getContentPane().add(textAreaSend);
-		frame.getContentPane().repaint(); 
-		textAreaDisplay.setEditable(true);
 		
 		
 		buttonSend = new JButton("Send");
 		buttonSend.setBounds(330, 460, 100, 20);// x axis, y axis, width, height
-		frame.getContentPane().add(buttonSend);
 		buttonSend.addActionListener(ignored -> {
 			if(this.onSendButtonCallback == null) return; 
 			this.onSendButtonCallback.run();
 		});
+		frame.getContentPane().add(buttonSend);
+		
 		
 		this.setState(IClientGUI.DEFAULT_STATE);
+		
 	}
 
 	@Override
