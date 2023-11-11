@@ -3,8 +3,8 @@ package elec366.assignment3.client.connection;
 import java.security.SecureRandom;
 import java.util.logging.Logger;
 
-import elec366.assignment3.protocol.crypto.AsymmetricCrypto;
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IAsymmetricCrypto;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
 import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
@@ -21,7 +21,7 @@ public abstract class SecurePacketClient extends PacketClient {
 	
 	private final Logger logger; 
 	
-	private final AsymmetricCrypto asc; 
+	private final IAsymmetricCrypto asc; 
 	
 	private SessionState sessionState; 
 	
@@ -29,7 +29,7 @@ public abstract class SecurePacketClient extends PacketClient {
 	public SecurePacketClient(Logger clientLogger, Logger networkLogger, String host, int port) {
 		super(clientLogger, networkLogger, host, port); 
 		this.logger = clientLogger; 
-		this.asc = AsymmetricCrypto.get(); 
+		this.asc = IAsymmetricCrypto.get(); 
 		this.sessionState = SessionState.DISCONNECTED; 
 	}
 
@@ -65,8 +65,8 @@ public abstract class SecurePacketClient extends PacketClient {
 					byte[] iv  = new byte[16]; 
 					sr.nextBytes(key);
 					sr.nextBytes(iv); 
-					StreamCipher cipher1 = StreamCipher.get(key, iv); 
-					StreamCipher cipher2 = StreamCipher.get(key, iv); 
+					IStreamCipher cipher1 = IStreamCipher.get(key, iv); 
+					IStreamCipher cipher2 = IStreamCipher.get(key, iv); 
 					this.sendPacket(new PacketInSetSessionKey(
 						this.asc.encrypt(key, packet0.getPublicKey()), 
 						this.asc.encrypt(iv,  packet0.getPublicKey())

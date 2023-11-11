@@ -10,7 +10,7 @@ import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamLoggingSDU;
 import elec366.assignment3.network.sdu.UpstreamPacketSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
@@ -112,11 +112,11 @@ public abstract class PacketServer {
 	
 	public abstract void onServerQuit(); 
 	
-	public void setDecoderEncryption(int connectionID, StreamCipher cipher) {
+	public void setDecoderEncryption(int connectionID, IStreamCipher cipher) {
 		this.connectionHandler.send(connectionID, new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_DECODER));
 	}
 	
-	public void setEncoderEncryption(int connectionID, StreamCipher cipher) {
+	public void setEncoderEncryption(int connectionID, IStreamCipher cipher) {
 		this.connectionHandler.send(connectionID, new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_ENCODER));
 	}
 	

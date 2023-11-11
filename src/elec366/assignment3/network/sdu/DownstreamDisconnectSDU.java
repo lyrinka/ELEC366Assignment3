@@ -3,7 +3,7 @@ package elec366.assignment3.network.sdu;
 public class DownstreamDisconnectSDU extends DownstreamSDU {
 
 	public DownstreamDisconnectSDU() {
-		super(SDU.Priority.VERY_HIGH); 
+		super(BaseSDU.Priority.VERY_HIGH); 
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package elec366.assignment3.network.sdu;
 
-public class SDU implements Comparable<SDU> {
+public class BaseSDU implements Comparable<BaseSDU> {
 
 	public static enum Priority {
 		VERY_HIGH	(200), 
@@ -24,20 +24,20 @@ public class SDU implements Comparable<SDU> {
 	
 	private final int priority; 
 	
-	public SDU(int priority) {
+	public BaseSDU(int priority) {
 		this.priority = priority; 
 	}
 	
-	public SDU(Priority priority) {
+	public BaseSDU(Priority priority) {
 		this(priority.getPriorityLevel()); 
 	}
 	
-	public SDU() {
+	public BaseSDU() {
 		this(Priority.MEDIUM); 
 	}
 
 	@Override
-	public int compareTo(SDU other) {
+	public int compareTo(BaseSDU other) {
 		return Integer.compare(this.priority, other.priority); 
 	}
 

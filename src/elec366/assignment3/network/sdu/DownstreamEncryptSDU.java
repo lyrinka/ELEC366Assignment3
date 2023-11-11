@@ -1,6 +1,6 @@
 package elec366.assignment3.network.sdu;
 
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 
 public class DownstreamEncryptSDU extends DownstreamSDU {
 
@@ -9,16 +9,16 @@ public class DownstreamEncryptSDU extends DownstreamSDU {
 		ENCRYPT_DECODER, 
 	}
 	
-	private final StreamCipher cipher; 
+	private final IStreamCipher cipher; 
 	private final Mode mode;
 	
-	public DownstreamEncryptSDU(StreamCipher cipher, Mode mode) {
+	public DownstreamEncryptSDU(IStreamCipher cipher, Mode mode) {
 		super();
 		this.cipher = cipher;
 		this.mode = mode;
 	}
 
-	public StreamCipher getCipher() {
+	public IStreamCipher getCipher() {
 		return this.cipher;
 	}
 

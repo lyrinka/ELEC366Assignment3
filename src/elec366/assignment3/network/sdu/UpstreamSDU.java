@@ -1,6 +1,6 @@
 package elec366.assignment3.network.sdu;
 
-public class UpstreamSDU extends SDU {
+public class UpstreamSDU extends BaseSDU {
 
 	public UpstreamSDU() {
 		super();
@@ -10,7 +10,7 @@ public class UpstreamSDU extends SDU {
 		super(priority);
 	}
 
-	public UpstreamSDU(SDU.Priority priority) {
+	public UpstreamSDU(BaseSDU.Priority priority) {
 		super(priority);
 	}
 

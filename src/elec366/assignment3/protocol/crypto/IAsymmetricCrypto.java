@@ -4,9 +4,9 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public interface AsymmetricCrypto {
+public interface IAsymmetricCrypto {
 	
-	public static AsymmetricCrypto get() {
+	public static IAsymmetricCrypto get() {
 		return new AsymmetricCryptoRSAImpl(); 
 	}
 	
