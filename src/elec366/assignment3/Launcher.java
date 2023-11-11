@@ -9,6 +9,12 @@ public class Launcher {
 		
 		IServerGUI serverGUI = new ServerGUI(); 
 		serverGUI.showUI();
+		
+		for(int i = 1; i <= 5; i++) {
+			Thread.sleep(1000);
+			serverGUI.setOnlinePlayers(new String[i]);
+		}
+		
 	}
 
 }

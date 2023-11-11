@@ -9,58 +9,51 @@ import javax.swing.SwingConstants;
 
 public class ServerGUI implements IServerGUI {
 
+	private final JFrame frame; 
+	private final JLabel connectionLabel; 
+	
 	public ServerGUI() {
-		JFrame frame = new JFrame();
+		
+		frame = new JFrame();
 		frame.setBounds(100, 100, 500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Chatting Server");
 		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
+		
+		
 		//Not connected
 		//I was thinking we can add an if else statement? 
 		//I just wasn't super clear on how to set it up...
-		JLabel labelNotConnected = new JLabel("Text Color: Red"); 
-		labelNotConnected.setForeground(Color.red);
-		labelNotConnected.setBounds(100, 50, 300, 30); 
-		labelNotConnected.setFont(new Font("Times", Font.BOLD, 14));
-		labelNotConnected.setHorizontalAlignment(SwingConstants.LEFT);
-		labelNotConnected.setVerticalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(labelNotConnected);
-		labelNotConnected.setText("Connection Status: Not Connected"); 
+		connectionLabel = new JLabel("Text Color: Red"); 
+		connectionLabel.setForeground(Color.red);
+		connectionLabel.setBounds(100, 50, 300, 30); 
+		connectionLabel.setFont(new Font("Times", Font.BOLD, 14));
+		connectionLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		connectionLabel.setVerticalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(connectionLabel);
 		
-		//Need to set up a counter of clients to work with the connection box
 		
-		JLabel labelConnected = new JLabel("Text Color: Blue"); 
-		labelConnected.setForeground(Color.blue);
-		labelConnected.setBounds(150, 50, 300, 30); 
-		labelConnected.setFont(new Font("Times", Font.BOLD, 14));
-		labelConnected.setHorizontalAlignment(SwingConstants.LEFT);
-		labelConnected.setVerticalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(labelConnected);
-		labelConnected.setText("Number Clients Connected");
+		this.setOnlinePlayers(new String[0]);
+		
 	}
 
 	@Override
 	public void showUI() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setState(State state) {
-		// TODO Auto-generated method stub
-		
+		this.frame.setVisible(true);
 	}
 
 	@Override
 	public void setOnlinePlayers(String[] players) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void appendLog(String appendedLine) {
-		// TODO Auto-generated method stub
+		if(players.length == 0) {
+			// Set as red "No Clients Connected"
+			this.connectionLabel.setForeground(Color.red);
+			this.connectionLabel.setText("No Clients Connected");
+		}
+		else {
+			// set as blue "N Clients Connected
+			this.connectionLabel.setForeground(Color.blue);
+			this.connectionLabel.setText(players.length + " Clients Connected");
+		}
 		
 	}
 
