@@ -39,13 +39,16 @@ public interface IClientGUI {
 	// UI writes - Change combo box online player list
 	void setOnlinePlayers(String[] onlinePlayerNames); 
 	
+	// UI writes - Clear message text box and regain focus
+	void setMessageFocus(); 
+	
 	// UI reads - Get player provided user name
 	String getUsername(); 
 	
 	// UI reads - Get combo box destination
 	String getRecepient(); 
 	
-	// UI reads - Get chat box content
-	String getChat(); 
+	// UI reads - Get message text box content
+	String getMessage(); 
 	
 }

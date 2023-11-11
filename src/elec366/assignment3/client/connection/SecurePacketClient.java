@@ -40,10 +40,13 @@ public abstract class SecurePacketClient extends PacketClient {
 
 	@Override
 	public void onDisconnection() {
-		// Removed for: issues when connection failed
-//		if(this.sessionState == SessionState.ESTABLISHED) {
-			this.onSecureDisconnection(); 
-//		}
+		this.onSecureDisconnection(); 
+		this.sessionState = SessionState.DISCONNECTED; 
+	}
+	
+	@Override
+	public void onAbnormalDisconnection(String reason, Throwable cause) {
+		this.onSecureAbnormalDisconnection(reason, cause);
 		this.sessionState = SessionState.DISCONNECTED; 
 	}
 
@@ -97,6 +100,8 @@ public abstract class SecurePacketClient extends PacketClient {
 	public abstract void onSecureConnection(); 
 	
 	public abstract void onSecureDisconnection(); 
+	
+	public abstract void onSecureAbnormalDisconnection(String reason, Throwable cause); 
 	
 	public abstract void onSecureOutboundPacket(Packet.Out packet); 
 	

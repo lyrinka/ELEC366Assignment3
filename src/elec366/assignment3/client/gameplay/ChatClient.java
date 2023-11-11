@@ -34,6 +34,11 @@ public abstract class ChatClient extends SecurePacketClient {
 	public void onSecureDisconnection() {
 		this.onChatServerDisconnection(); 
 	}
+	
+	@Override
+	public void onSecureAbnormalDisconnection(String reason, Throwable cause) {
+		this.onChatServerAbnormalDisconnection(reason, cause);
+	}
 
 	@Override
 	public void onSecureOutboundPacket(Packet.Out packet) {
@@ -56,6 +61,10 @@ public abstract class ChatClient extends SecurePacketClient {
 	public abstract void onPlayerListUpdate(String[] players); 
 	
 	public abstract void onChatServerDisconnection(); 
+	
+	public void onChatServerAbnormalDisconnection(String reason, Throwable cause) {
+		this.onChatServerDisconnection();
+	}
 	
 	public void sendChatMessage(String message) {
 		this.sendSecurePacket(new PacketInChat(message));
