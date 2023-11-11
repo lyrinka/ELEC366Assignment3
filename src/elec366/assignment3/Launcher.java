@@ -9,6 +9,11 @@ public class Launcher {
 		
 		IClientGUI clientGUI = new ClientGUI(); 
 		
+		clientGUI.onConnectionButton(() -> clientGUI.displayDialog("Debug", "Connection button clicked!"));
+		clientGUI.onSendButton(() -> {
+			
+		});
+		
 		clientGUI.showUI(); 
 		
 	}

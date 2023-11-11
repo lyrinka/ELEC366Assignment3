@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -22,7 +23,10 @@ public class ClientGUI implements IClientGUI {
 	private final JLabel labelSend; 
 	private final JComboBox<String> names; 
 	private final JTextArea textAreaSend; 
-	private final JButton buttonSend; 
+	private final JButton buttonSend;
+	
+	private Runnable onConnectionButtonCallback;
+	private Runnable onSendButtonCallback; 
 	
 	public ClientGUI() {
 		frame = new JFrame();
@@ -54,18 +58,9 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().repaint(); 
 		textAreaDisplay.setEditable(false); //It is still staying editable....
 		
-		buttonconnect.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent Connect) {
-				//if(connected) {
-					//for if connected or not connected
-				//}
-				
-				//Cannot get the name to work properly I need to understand the interface more behind the scenes to get how its being saved or is there a better way to display the name?
-				//textAreaDisplay.setText("Connection rejected: The name " + enteredName +" is used by another client");
-				
-				textAreaDisplay.setText("You are Connected");
-			}
+		buttonconnect.addActionListener(ignored -> {
+			if(this.onConnectionButtonCallback == null) return; 
+			this.onConnectionButtonCallback.run(); 
 		});
 		
 	
@@ -105,28 +100,22 @@ public class ClientGUI implements IClientGUI {
 		buttonSend = new JButton("Send");
 		buttonSend.setBounds(330, 460, 100, 20);// x axis, y axis, width, height
 		frame.getContentPane().add(buttonSend);
-		buttonSend.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent send) {
-				
-				// Need to add a list or something of test so it doesnt replace it and adds to the list?
-				
-				String entered = textAreaSend.getText();
-				textAreaDisplay.setText(entered);
-			}
+		buttonSend.addActionListener(ignored -> {
+			if(this.onSendButtonCallback == null) return; 
+			this.onSendButtonCallback.run();
 		});
+		
+		this.setState(IClientGUI.DEFAULT_STATE);
 	}
 
 	@Override
 	public void onConnectionButton(Runnable callback) {
-		// TODO Auto-generated method stub
-		
+		this.onConnectionButtonCallback = callback; 
 	}
 
 	@Override
 	public void onSendButton(Runnable callback) {
-		// TODO Auto-generated method stub
-		
+		this.onSendButtonCallback = callback; 
 	}
 
 	@Override
@@ -142,8 +131,7 @@ public class ClientGUI implements IClientGUI {
 
 	@Override
 	public void displayDialog(String dialogTitle, String displayedMessage) {
-		// TODO Auto-generated method stub
-		
+		JOptionPane.showMessageDialog(null, displayedMessage, dialogTitle, JOptionPane.INFORMATION_MESSAGE);	
 	}
 
 	@Override
