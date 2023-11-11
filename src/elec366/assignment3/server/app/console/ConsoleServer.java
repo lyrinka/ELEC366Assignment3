@@ -5,8 +5,8 @@ import elec366.assignment3.util.LoggerUtil;
 
 public class ConsoleServer extends ChatServer {
 
-	public ConsoleServer() {
-		super(LoggerUtil.createLogger("Server"), LoggerUtil.createLogger("Tracer"), 14567); 
+	public ConsoleServer(int port) {
+		super(LoggerUtil.createLogger("Server"), LoggerUtil.createLogger("Tracer"), port); 
 	}
 
 }

@@ -112,6 +112,12 @@ public class ClientGUI implements IClientGUI {
 	public void onSendButton(Runnable callback) {
 		this.onSendButtonCallback = callback; 
 	}
+	
+	@Override
+	public void removeCallbacks() {
+		this.onConnectionButtonCallback = null; 
+		this.onSendButtonCallback = null; 
+	}
 
 	@Override
 	public void showUI() {
