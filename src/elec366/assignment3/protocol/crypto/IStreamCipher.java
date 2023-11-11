@@ -1,8 +1,8 @@
 package elec366.assignment3.protocol.crypto;
 
-public interface StreamCipher {
+public interface IStreamCipher {
 	
-	public static StreamCipher get(byte[] key, byte[] iv) {
+	public static IStreamCipher get(byte[] key, byte[] iv) {
 		return new StreamCipherAESImpl(key, iv); 
 	}
 	

@@ -32,7 +32,7 @@ public class ProtocolTest {
 			PacketDecoder clientDecoder = new PacketDecoder(); 
 			
 			// Server side
-			AsymmetricCrypto asc = AsymmetricCrypto.get(); 
+			IAsymmetricCrypto asc = IAsymmetricCrypto.get(); 
 			KeyPair serverKeypair = asc.generateKeypair(); 
 			serverEncoder.send(serverTx, new PacketOutSetPublicKey(serverKeypair.getPublic())); 
 			
@@ -43,7 +43,7 @@ public class ProtocolTest {
 			SecureRandom clientSecureRandom = new SecureRandom(); 
 			clientSecureRandom.nextBytes(clientKey); 
 			clientSecureRandom.nextBytes(clientIV);
-			StreamCipher clientCipher = StreamCipher.get(clientKey, clientIV); 
+			IStreamCipher clientCipher = IStreamCipher.get(clientKey, clientIV); 
 			clientKey = asc.encrypt(clientKey, clientPublicKey); 
 			clientIV = asc.encrypt(clientIV, clientPublicKey); 
 			clientEncoder.send(clientTx, new PacketInSetSessionKey(clientKey, clientIV));
@@ -53,7 +53,7 @@ public class ProtocolTest {
 			PacketInSetSessionKey serverPacket1 = (PacketInSetSessionKey)serverDecoder.readFullPacket(serverRx); 
 			byte[] serverKey = asc.decrypt(serverPacket1.getKey(), serverKeypair.getPrivate()); 
 			byte[] serverIV = asc.decrypt(serverPacket1.getIv(), serverKeypair.getPrivate()); 
-			StreamCipher serverCipher = StreamCipher.get(serverKey, serverIV); 
+			IStreamCipher serverCipher = IStreamCipher.get(serverKey, serverIV); 
 			serverDecoder.attachCipher(serverCipher);
 			
 			// Normal communication follows

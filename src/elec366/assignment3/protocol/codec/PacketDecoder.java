@@ -8,12 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import elec366.assignment3.protocol.codec.exception.PacketDecodeException;
 import elec366.assignment3.protocol.codec.exception.PacketDesynchronizedException;
 import elec366.assignment3.protocol.codec.exception.PacketHeaderInvalidException;
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.PacketType;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 
-public class PacketDecoder implements Cipherable {
+public class PacketDecoder implements ICipherable {
 	
 	private static final int MAX_PACKET_LENGTH = 65535; 
 	
@@ -28,7 +28,7 @@ public class PacketDecoder implements Cipherable {
 	private int buffer0; 
 	private byte[] buffer1; 
 	
-	private StreamCipher cipher; 
+	private IStreamCipher cipher; 
 	
 	public PacketDecoder() {
 		this.state = State.READ_LENGTH; 
@@ -44,7 +44,7 @@ public class PacketDecoder implements Cipherable {
 	}
 	
 	@Override
-	public void attachCipher(StreamCipher cipher) {
+	public void attachCipher(IStreamCipher cipher) {
 		this.cipher = cipher; 
 	}
 	

@@ -1,6 +1,6 @@
 package elec366.assignment3.network.sdu;
 
-public abstract class DownstreamSDU extends SDU {
+public abstract class DownstreamSDU extends BaseSDU {
 
 	public DownstreamSDU() {
 		super();

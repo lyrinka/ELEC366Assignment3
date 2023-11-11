@@ -3,13 +3,13 @@ package elec366.assignment3.protocol.codec;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.PacketDirection;
 
-public class PacketEncoder implements Cipherable {
+public class PacketEncoder implements ICipherable {
 	
-	private StreamCipher cipher; 
+	private IStreamCipher cipher; 
 	
 	public PacketEncoder() {
 		this.cipher = null; 
@@ -21,7 +21,7 @@ public class PacketEncoder implements Cipherable {
 	}
 
 	@Override
-	public void attachCipher(StreamCipher cipher) {
+	public void attachCipher(IStreamCipher cipher) {
 		this.cipher = cipher; 
 	}
 	

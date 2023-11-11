@@ -12,11 +12,10 @@ public interface IClientGUI {
 	
 	public static State DEFAULT_STATE = State.DISCONNECTED; 
 	
-	// UI activity - Connection button callback
+	// UI activity - Callbacks
 	void onConnectionButton(Runnable callback); 
-	
-	// UI activity - Send button callback
 	void onSendButton(Runnable callback); 
+	void removeCallbacks(); 
 	
 	// User interface state
 	void showUI(); 

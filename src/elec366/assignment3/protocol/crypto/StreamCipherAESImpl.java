@@ -10,7 +10,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class StreamCipherAESImpl implements StreamCipher {
+public class StreamCipherAESImpl implements IStreamCipher {
 
 	private final Cipher encrypt; 
 	private final Cipher decrypt; 

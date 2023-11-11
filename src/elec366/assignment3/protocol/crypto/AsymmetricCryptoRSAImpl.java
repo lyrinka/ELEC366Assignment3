@@ -15,7 +15,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class AsymmetricCryptoRSAImpl implements AsymmetricCrypto {
+public class AsymmetricCryptoRSAImpl implements IAsymmetricCrypto {
 	
 	AsymmetricCryptoRSAImpl() {
 		

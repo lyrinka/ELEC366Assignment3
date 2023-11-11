@@ -10,7 +10,7 @@ import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamLoggingSDU;
 import elec366.assignment3.network.sdu.UpstreamPacketSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
-import elec366.assignment3.protocol.crypto.StreamCipher;
+import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 
@@ -90,11 +90,11 @@ public abstract class PacketClient {
 	
 	public abstract void onOutboundPacket(Packet.Out packet); 
 
-	public void setDecoderEncryption(StreamCipher cipher) {
+	public void setDecoderEncryption(IStreamCipher cipher) {
 		this.connectionHandler.send(new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_DECODER));
 	}
 	
-	public void setEncoderEncryption(StreamCipher cipher) {
+	public void setEncoderEncryption(IStreamCipher cipher) {
 		this.connectionHandler.send(new DownstreamEncryptSDU(cipher, DownstreamEncryptSDU.Mode.ENCRYPT_ENCODER));
 	}
 	
