@@ -11,6 +11,7 @@ import elec366.assignment3.richtext.RichTextParser;
 import elec366.assignment3.server.ServerResources;
 import elec366.assignment3.server.ServerSettings;
 import elec366.assignment3.type.ChatMessageType;
+import elec366.assignment3.util.SingleLineSanitizer;
 
 public class ChatServer extends MultiplayerServer {
 
@@ -67,9 +68,7 @@ public class ChatServer extends MultiplayerServer {
 			this.logMessage(String.format(ServerResources.OVERSIZE_MESSAGE_LOG, player.getName(), message.length())); 
 			return; 
 		}
-		message = message.replaceAll("(?:[\r\n]+|\t)", " "); 
-		message = message.replaceAll("[\\p{Cntrl}]", ""); 
-		message = message.trim(); 
+		message = SingleLineSanitizer.sanitize(message); 
 		if(message.isEmpty()) return; 
 		if(message.startsWith("/")) {
 			this.logMessage(String.format(ServerResources.COMMAND_ISSUE, player.getName(), message)); 

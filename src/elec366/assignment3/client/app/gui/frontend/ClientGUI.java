@@ -1,9 +1,7 @@
 package elec366.assignment3.client.app.gui.frontend;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -12,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import elec366.assignment3.util.SingleLineSanitizer;
 
 public class ClientGUI implements IClientGUI {
 
@@ -64,7 +64,7 @@ public class ClientGUI implements IClientGUI {
 		textAreaDisplay.setBounds(10, 90, 350, 300);
 		frame.getContentPane().add(textAreaDisplay);
 		frame.getContentPane().repaint(); 
-		textAreaDisplay.setEditable(false); //It is still staying editable....
+		textAreaDisplay.setEditable(false); 
 		
 		
 		//need to use the users entered name here
@@ -120,6 +120,7 @@ public class ClientGUI implements IClientGUI {
 
 	@Override
 	public void setState(State state) {
+		if(state == null) return; 
 		boolean showSendUI; 
 		switch(state) {
 			default:
@@ -155,49 +156,66 @@ public class ClientGUI implements IClientGUI {
 
 	@Override
 	public void displayDialog(String dialogTitle, String displayedMessage) {
+		if(displayedMessage == null || displayedMessage.isEmpty()) return; 
+		if(dialogTitle == null || dialogTitle.isEmpty()) dialogTitle = "Message"; 
 		JOptionPane.showMessageDialog(null, displayedMessage, dialogTitle, JOptionPane.INFORMATION_MESSAGE);	
 	}
 
 	@Override
 	public void setApplicationTitle(String applicationTitle) {
-		// TODO Auto-generated method stub
-		
+		if(applicationTitle == null || applicationTitle.isEmpty()) return; 
+		this.frame.setTitle(applicationTitle);
 	}
 
 	@Override
 	public void clearChat() {
-		// TODO Auto-generated method stub
-		
+		this.textAreaDisplay.setText("");
 	}
 
 	@Override
 	public void appendChat(String appendedLine) {
-		// TODO Auto-generated method stub
-		
+		if(appendedLine == null) return; 
+		this.textAreaDisplay.append(SingleLineSanitizer.sanitize(appendedLine) + "\n");
 	}
 
 	@Override
 	public void setOnlinePlayers(String[] onlinePlayerNames) {
-		// TODO Auto-generated method stub
-		
+		// Consulted source:
+		// https://stackoverflow.com/questions/4747020/how-to-update-jcombobox-content-from-arraylist
+		if(onlinePlayerNames == null) return; 
+		if(onlinePlayerNames.length == 0) {
+			this.names.removeAllItems(); 
+			return; 
+		}
+		String prev = (String)this.names.getSelectedItem(); 
+		this.names.setModel(new DefaultComboBoxModel<String>(onlinePlayerNames));
+		int index = 0; 
+		if(prev != null) {
+			for(int i = 0; i < onlinePlayerNames.length; i++) {
+				if(onlinePlayerNames[i].equalsIgnoreCase(prev)) {
+					index = i; 
+					break; 
+				}
+			}
+		}
+		this.names.setSelectedIndex(index);
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.textfieldClientName.getText().trim(); 
 	}
 
 	@Override
 	public String getRecepient() {
-		// TODO Auto-generated method stub
-		return null;
+		String recepient = (String)this.names.getSelectedItem(); 
+		if(recepient == null) return ""; 
+		return recepient; 
 	}
 
 	@Override
 	public String getChat() {
-		// TODO Auto-generated method stub
-		return null;
+		return SingleLineSanitizer.sanitize(this.textAreaSend.getText()); 
 	}
 
 }
