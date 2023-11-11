@@ -1,6 +1,6 @@
 package elec366.assignment3.client.app.gui.frontend;
 
-import elec366.assignment3.client.app.gui.richtext.RichText;
+import elec366.assignment3.richtext.RichText;
 
 public interface IClientGUI {
 	
