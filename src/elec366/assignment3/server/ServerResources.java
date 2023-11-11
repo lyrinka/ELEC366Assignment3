@@ -13,6 +13,9 @@ public class ServerResources {
 
 	public static String QUIT_MESSAGE = "%s has disconnected.";
 	
+	public static String OVERSIZE_MESSAGE = "Your message is too long!"; 
+	public static String OVERSIZE_MESSAGE_LOG = "User %s sent oversized message (length=%d)."; 
+	
 	public static String CHAT_FORMAT = "<%s> %s"; 
 	
 	public static String COMMAND_ISSUE = "%s issued server command: %s"; 

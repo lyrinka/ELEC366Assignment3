@@ -9,4 +9,6 @@ public class ServerSettings {
 
 	public static String STOP_PASSWORD = ""; 
 	
+	public static int MESSAGE_LENGTH_MAX = 1000;
+	
 }

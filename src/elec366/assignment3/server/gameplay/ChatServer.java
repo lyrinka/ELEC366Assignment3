@@ -6,12 +6,16 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import elec366.assignment3.richtext.RichText;
+import elec366.assignment3.richtext.RichTextParser;
 import elec366.assignment3.server.ServerResources;
 import elec366.assignment3.server.ServerSettings;
 import elec366.assignment3.type.ChatMessageType;
 
 public class ChatServer extends MultiplayerServer {
 
+	public static boolean USE_CONSOLE_CODE = true; 
+	
 	public ChatServer(Logger serverLogger, Logger networkLogger, int port) {
 		super(serverLogger, networkLogger, port);
 	}
@@ -19,7 +23,7 @@ public class ChatServer extends MultiplayerServer {
 	@Override
 	public void onPlayerNameConflict(Player player) {
 		String message = String.format(ServerResources.LOGIN_NAME_CONFLICT, player.getName()); 
-		this.getLogger().info(String.format(ServerResources.LOGIN_KICK_PREFIX, player.getName()) + message);
+		this.logMessage(String.format(ServerResources.LOGIN_KICK_PREFIX, player.getName()) + message);
 		player.sendServerMessage(message); 
 	}
 
@@ -27,7 +31,7 @@ public class ChatServer extends MultiplayerServer {
 	public boolean onPlayerPreLogin(Player player) {
 		String message = this.playerUsernameCheck(player.getName()); 
 		if(message == null) return true; 
-		this.getLogger().info(String.format(ServerResources.LOGIN_KICK_PREFIX, player.getName()) + message);
+		this.logMessage(String.format(ServerResources.LOGIN_KICK_PREFIX, player.getName()) + message);
 		player.sendServerMessage(message); 
 		return false; 
 	}
@@ -58,24 +62,35 @@ public class ChatServer extends MultiplayerServer {
 
 	@Override
 	public void onPlayerChat(Player player, String message) {
-		// TODO: sanitize message (maximum length, line feeds, etc)
+		if(message.length() > ServerSettings.MESSAGE_LENGTH_MAX) {
+			player.sendServerMessage(ServerResources.OVERSIZE_MESSAGE);
+			this.logMessage(String.format(ServerResources.OVERSIZE_MESSAGE_LOG, player.getName(), message.length())); 
+			return; 
+		}
+		message = message.replaceAll("(?:[\r\n]+|\t)", " "); 
+		message = message.replaceAll("[\\p{Cntrl}]", ""); 
 		message = message.trim(); 
 		if(message.isEmpty()) return; 
 		if(message.startsWith("/")) {
-			this.getLogger().info(String.format(ServerResources.COMMAND_ISSUE, player.getName(), message)); 
+			this.logMessage(String.format(ServerResources.COMMAND_ISSUE, player.getName(), message)); 
 			String command = message.substring(1); 
 			this.onPlayerCommand(player, command.trim()); 
 		}
 		else {
-			// TODO: rich text support for console logging
 			String chatMessage = String.format(ServerResources.CHAT_FORMAT, player.getName(), message); 
 			this.broadcastMessage(ChatMessageType.CHAT_GLOBAL, chatMessage);
 		}
 	}
 	
 	public void broadcastMessage(ChatMessageType type, String message) {
-		this.getLogger().info(message);
+		this.logMessage(message);
 		this.getOnlinePlayerStream().forEach(p -> p.sendMessage(type, message));
+	}
+	
+	public void logMessage(String message) {
+		RichText text = RichTextParser.parse(message); 
+		String formattedMessage = USE_CONSOLE_CODE ? text.toConsoleString() : text.toString(); 
+		this.getLogger().info("[PLAY] " + formattedMessage);
 	}
 	
 	public void onPlayerCommand(Player player, String message) {
@@ -97,7 +112,7 @@ public class ChatServer extends MultiplayerServer {
 			}
 			case "stop": {
 				if(ServerSettings.STOP_PASSWORD.isEmpty() || ServerSettings.STOP_PASSWORD.equals(args)) {
-					this.getLogger().info(ServerResources.COMMAND_STOP_SHUTDOWN);
+					this.logMessage(ServerResources.COMMAND_STOP_SHUTDOWN);
 					player.sendServerMessage(ServerResources.COMMAND_STOP_SHUTDOWN);
 					this.shutdown();
 				}
@@ -133,7 +148,7 @@ public class ChatServer extends MultiplayerServer {
 				String msg1 = String.format(ServerResources.COMMAND_TELL_MSG, player.getName(), receiver.getName(), concent); 
 				String msg2 = String.format(ServerResources.COMMAND_TELL_MSG, ServerResources.COMMAND_TELL_MSG_YOU, receiver.getName(), concent);
 				String msg3 = String.format(ServerResources.COMMAND_TELL_MSG, player.getName(), ServerResources.COMMAND_TELL_MSG_YOU, concent);
-				this.getLogger().info(msg1);
+				this.logMessage(msg1);
 				player.sendMessage(ChatMessageType.CHAT_PRIVATE, msg2);
 				receiver.sendMessage(ChatMessageType.CHAT_PRIVATE, msg3); 
 				return; 
