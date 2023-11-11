@@ -83,9 +83,7 @@ public class ClientGUI implements IClientGUI {
 		
 		//an example to see it works
 		
-		String[] stringNames= {"Jack", "Julie", "Stephanie"};
-		
-		names = new JComboBox<String>(stringNames); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
+		names = new JComboBox<String>(); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
 		names.setBounds(80, 390, 300, 30);
 		names.setFont(new Font("Times", Font.BOLD, 12));
 		frame.getContentPane().add(names);
@@ -125,8 +123,37 @@ public class ClientGUI implements IClientGUI {
 
 	@Override
 	public void setState(State state) {
-		// TODO Auto-generated method stub
-		
+		boolean showSendUI; 
+		switch(state) {
+			default:
+			case DISCONNECTED: {
+				this.buttonconnect.setText("Connect");
+				this.buttonconnect.setEnabled(true);
+				this.textfieldClientName.setEnabled(true);
+				showSendUI = false; 
+				this.setOnlinePlayers(new String[0]);
+				this.textAreaSend.setText("");
+				break; 
+			}
+			case CONNECTING: {
+				this.buttonconnect.setText("Connecting..");
+				this.buttonconnect.setEnabled(false);
+				this.textfieldClientName.setEnabled(false);
+				showSendUI = false; 
+				break; 
+			}
+			case CONNECTED: {
+				this.buttonconnect.setText("Disconnect");
+				this.buttonconnect.setEnabled(true);
+				this.textfieldClientName.setEnabled(false);
+				showSendUI = true; 
+				break;
+			}
+		}
+		this.labelSend.setVisible(showSendUI);
+		this.buttonSend.setVisible(showSendUI);
+		this.textAreaSend.setVisible(showSendUI);
+		this.names.setVisible(showSendUI);
 	}
 
 	@Override
