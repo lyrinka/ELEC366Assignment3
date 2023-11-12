@@ -26,21 +26,23 @@ public class GraphicalClientLauncher implements Runnable {
 	public void run() {
 		this.ui.onConnectionButton(this::onConnectButton);
 		this.ui.setState(IClientGUI.State.DISCONNECTED);
-		this.ui.clearChat();
 		this.ui.showUI();
 	}
 
 	protected void onConnectButton() {
 		String username = this.ui.getUsername().trim(); 
 		if(username.isEmpty()) return; 
+		this.ui.clearChat();
 		this.ui.setState(IClientGUI.State.CONNECTING);
-		(new GraphicalClient(
-				this.ui, 
-				username, 
-				this.conn, 
-				this.loggers, 
-				this::run
-		)).start(); 
+		new Thread(() -> {
+			(new GraphicalClient(
+					this.ui, 
+					username, 
+					this.conn, 
+					this.loggers, 
+					this::run
+			)).start(); 
+		}).start();
 	}
 	
 }
