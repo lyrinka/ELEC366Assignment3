@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.util.SingleLineSanitizer;
 
 public class ClientGUI implements IClientGUI {
@@ -36,6 +37,8 @@ public class ClientGUI implements IClientGUI {
 		frame.setTitle("Chatting Client");
 		frame.getContentPane().setLayout(null);
 		
+		// TODO: Fields for server address / port
+		// Default: "localhost:14567"
 		
 		labelClientName = new JLabel("Client Name: "); 
 		labelClientName.setBounds(10, 50, 300, 30);
@@ -45,12 +48,14 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(labelClientName);
 		
 		
+		// TODO: this text is a bit clipped
 		textfieldClientName = new JTextField();
 		textfieldClientName.setFont(new Font("Times", Font.BOLD, 12));
 		textfieldClientName.setBounds(100, 55, 120, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldClientName);
 		
 		
+		// TODO: The button is not wide enough to display "Connecting.."
 		buttonconnect = new JButton("Connect");
 		buttonconnect.setBounds(230, 55, 100, 20);// x axis, y axis, width, height
 		buttonconnect.addActionListener(ignored -> {
@@ -60,6 +65,9 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(buttonconnect);
 		
 		
+		// TODO: wrapping and scrolling
+		// TODO: right click menu
+		// TODO: rich text improvement
 		textAreaDisplay = new JTextArea();
 		textAreaDisplay.setBounds(10, 90, 350, 300);
 		frame.getContentPane().add(textAreaDisplay);
@@ -85,6 +93,8 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(names);
 		
 		
+		// TODO: limit text to single line
+		// TODO: press enter to send (same effect as pressing the send button)
 		textAreaSend = new JTextArea();
 		textAreaSend.setBounds(10, 430, 300, 80);
 		frame.getContentPane().add(textAreaSend);
@@ -131,6 +141,7 @@ public class ClientGUI implements IClientGUI {
 		switch(state) {
 			default:
 			case DISCONNECTED: {
+				// TODO: enable server host/port textfield here
 				this.buttonconnect.setText("Connect");
 				this.buttonconnect.setEnabled(true);
 				this.textfieldClientName.setEnabled(true);
@@ -140,6 +151,7 @@ public class ClientGUI implements IClientGUI {
 				break; 
 			}
 			case CONNECTING: {
+				// TODO: disable server host/port textfield here
 				this.buttonconnect.setText("Connecting..");
 				this.buttonconnect.setEnabled(false);
 				this.textfieldClientName.setEnabled(false);
@@ -147,6 +159,7 @@ public class ClientGUI implements IClientGUI {
 				break; 
 			}
 			case CONNECTED: {
+				// TODO: disable server host/port textfield here
 				this.buttonconnect.setText("Disconnect");
 				this.buttonconnect.setEnabled(true);
 				this.textfieldClientName.setEnabled(false);
@@ -175,13 +188,20 @@ public class ClientGUI implements IClientGUI {
 
 	@Override
 	public void clearChat() {
+		// TODO: related to rich text improvement
 		this.textAreaDisplay.setText("");
 	}
 
 	@Override
 	public void appendChat(String appendedLine) {
+		// TODO: related to rich text improvement
 		if(appendedLine == null) return; 
 		this.textAreaDisplay.append(SingleLineSanitizer.sanitize(appendedLine) + "\n");
+	}
+	
+	public void appendChat(RichText appendedLine) {
+		// TODO: related to rich text improvement
+		this.appendChat(appendedLine.toString());
 	}
 
 	@Override
@@ -213,6 +233,12 @@ public class ClientGUI implements IClientGUI {
 		this.textAreaSend.requestFocus();
 	}
 
+	@Override
+	public String getServerAddress() {
+		// TODO: read text in server host/port component
+		return "localhost:14567"; 
+	}
+	
 	@Override
 	public String getUsername() {
 		return this.textfieldClientName.getText().trim(); 

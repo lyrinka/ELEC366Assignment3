@@ -42,6 +42,9 @@ public interface IClientGUI {
 	// UI writes - Clear message text box and regain focus
 	void setMessageFocus(); 
 	
+	// UI reads - Get server address/port
+	String getServerAddress(); 
+	
 	// UI reads - Get player provided user name
 	String getUsername(); 
 	
