@@ -15,9 +15,9 @@ public class GraphicalServerLauncher implements Runnable {
 	
 	private final IServerGUI ui; 
 	
-	public GraphicalServerLauncher(int port) {
+	public GraphicalServerLauncher(int port, boolean verbose) {
 		this.port = port; 
-		this.loggers = new Pair<>(LoggerUtil.createLogger("Server"), LoggerUtil.createLogger("Tracer"));
+		this.loggers = new Pair<>(LoggerUtil.createLogger("Server"), verbose ? LoggerUtil.createLogger("Tracer") : null);
 		this.ui = new ServerGUI(); 
 	}
 

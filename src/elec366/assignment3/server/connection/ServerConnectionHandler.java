@@ -64,7 +64,8 @@ public class ServerConnectionHandler {
 				this.runServer();
 			}
 			catch(IOException ex) {
-				this.logger.log(Level.SEVERE, "Unable to start server.", ex);
+				if(this.logger != null)
+					this.logger.log(Level.SEVERE, "Unable to start server.", ex);
 				this.stopUpstream(); 
 			}
 			

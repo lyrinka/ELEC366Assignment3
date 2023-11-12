@@ -47,7 +47,8 @@ public class ClientConnectionHandler {
 			this.startServer();
 		}
 		catch(IOException ex) {
-			this.logger.log(Level.SEVERE, "Unable to start client. Socket connection failed.", ex); 
+			if(this.logger != null)
+				this.logger.log(Level.SEVERE, "Unable to start client. Socket connection failed.", ex); 
 			this.upstream.add(new UpstreamAbnormalDisconnectionSDU("Connection failed."));
 		}
 

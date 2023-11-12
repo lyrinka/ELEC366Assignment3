@@ -16,9 +16,9 @@ public class GraphicalClientLauncher implements Runnable {
 	
 	private final IClientGUI ui;
 	
-	public GraphicalClientLauncher(ConnectionInformation conn) {
+	public GraphicalClientLauncher(ConnectionInformation conn, boolean verbose) {
 		this.conn = conn; 
-		this.loggers = new Pair<>(LoggerUtil.createLogger("Client"), LoggerUtil.createLogger("Tracer")); 
+		this.loggers = new Pair<>(LoggerUtil.createLogger("Client"), verbose ? LoggerUtil.createLogger("Tracer") : null); 
 		this.ui = new ClientGUI(); 
 	}
 	

@@ -2,8 +2,8 @@ package elec366.assignment3.client.app.type;
 
 public class ConnectionInformation {
 
-	private final String host; 
-	private final int port;
+	private String host; 
+	private int port;
 	
 	public ConnectionInformation(String host, int port) {
 		this.host = host;
@@ -16,6 +16,14 @@ public class ConnectionInformation {
 
 	public int getPort() {
 		return this.port;
-	} 
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
 	
 }
