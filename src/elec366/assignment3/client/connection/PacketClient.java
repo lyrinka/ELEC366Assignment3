@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
 import elec366.assignment3.network.sdu.DownstreamEncryptSDU;
 import elec366.assignment3.network.sdu.DownstreamPacketSDU;
+import elec366.assignment3.network.sdu.UpstreamAbnormalDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamLoggingSDU;
 import elec366.assignment3.network.sdu.UpstreamPacketSDU;
@@ -57,7 +58,13 @@ public abstract class PacketClient {
 			} 
 			
 			if(sdu instanceof UpstreamDisconnectionSDU) {
-				this.onDisconnection(); 
+				if(sdu instanceof UpstreamAbnormalDisconnectionSDU) {
+					UpstreamAbnormalDisconnectionSDU sdu0 = (UpstreamAbnormalDisconnectionSDU)sdu; 
+					this.onAbnormalDisconnection(sdu0.getReason(), sdu0.getCause()); 
+				}
+				else {
+					this.onDisconnection(); 
+				}
 				return; 
 			}
 			if(sdu instanceof UpstreamConnectionSDU) {
@@ -87,6 +94,8 @@ public abstract class PacketClient {
 	public abstract void onConnection(); 
 	
 	public abstract void onDisconnection(); 
+	
+	public abstract void onAbnormalDisconnection(String reason, Throwable cause); 
 	
 	public abstract void onOutboundPacket(Packet.Out packet); 
 

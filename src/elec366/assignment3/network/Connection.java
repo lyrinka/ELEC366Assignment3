@@ -13,6 +13,7 @@ import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
 import elec366.assignment3.network.sdu.DownstreamEncryptSDU;
 import elec366.assignment3.network.sdu.DownstreamPacketSDU;
 import elec366.assignment3.network.sdu.DownstreamSDU;
+import elec366.assignment3.network.sdu.UpstreamAbnormalDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamPacketSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
@@ -69,7 +70,7 @@ public class Connection {
 				sdu = new UpstreamDisconnectionSDU(); 
 			}
 			catch (PacketDecodeException | PayloadDeserializationException e) {
-				sdu = new UpstreamDisconnectionSDU("Packet decoding failed.", e); 
+				sdu = new UpstreamAbnormalDisconnectionSDU("Packet decoding failed.", e); 
 			}
 			
 			if(sdu.getCause() == null) {

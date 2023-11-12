@@ -50,12 +50,20 @@ public class GraphicalClient extends ChatClient {
 	public void onChatServerDisconnection() {
 		this.ui.removeCallbacks();
 		this.ui.appendChat("Disconnected.");
+		this.ui.appendChat("");
 		this.ui.setState(IClientGUI.State.DISCONNECTED);
 		this.disconnectionCallback.run();
 	}
 	
+	@Override
+	public void onChatServerAbnormalDisconnection(String reason, Throwable cause) {
+		this.ui.appendChat("A network has occured. " + (reason == null ? "" : "Internal information: " + reason));
+		if(cause != null) this.ui.appendChat(cause.toString());
+		this.onChatServerDisconnection();
+	}
+	
 	protected void onSendButton() {
-		String chat = this.ui.getChat(); 
+		String chat = this.ui.getMessage(); 
 		String recepient = this.ui.getRecepient(); 
 		if(recepient.isEmpty() || recepient.equals("<everyone>")) {
 			this.sendChatMessage(chat);

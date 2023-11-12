@@ -206,6 +206,12 @@ public class ClientGUI implements IClientGUI {
 		}
 		this.names.setSelectedIndex(index);
 	}
+	
+	@Override
+	public void setMessageFocus() {
+		this.textAreaSend.setText("");
+		this.textAreaSend.requestFocus();
+	}
 
 	@Override
 	public String getUsername() {
@@ -220,7 +226,7 @@ public class ClientGUI implements IClientGUI {
 	}
 
 	@Override
-	public String getChat() {
+	public String getMessage() {
 		return SingleLineSanitizer.sanitize(this.textAreaSend.getText()); 
 	}
 

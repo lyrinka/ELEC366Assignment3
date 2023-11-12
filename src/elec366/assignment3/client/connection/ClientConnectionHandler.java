@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import elec366.assignment3.network.Connection;
 import elec366.assignment3.network.sdu.DownstreamDisconnectSDU;
 import elec366.assignment3.network.sdu.DownstreamSDU;
+import elec366.assignment3.network.sdu.UpstreamAbnormalDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
@@ -46,8 +47,8 @@ public class ClientConnectionHandler {
 			this.startServer();
 		}
 		catch(IOException ex) {
-			this.logger.log(Level.SEVERE, "Unable to start client.", ex); 
-			this.stopUpstream(); 
+			this.logger.log(Level.SEVERE, "Unable to start client. Socket connection failed.", ex); 
+			this.upstream.add(new UpstreamAbnormalDisconnectionSDU("Connection failed."));
 		}
 
 	}
@@ -74,10 +75,6 @@ public class ClientConnectionHandler {
 			throw new RuntimeException(e); 
 		}
 		
-	}
-	
-	private void stopUpstream() {
-		this.upstream.add(new UpstreamDisconnectionSDU());
 	}
 	
 	private static class UpstreamSDUConsumer implements Consumer<UpstreamSDU> {
