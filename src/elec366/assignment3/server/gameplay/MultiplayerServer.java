@@ -136,7 +136,7 @@ public abstract class MultiplayerServer extends SecurePacketServer {
 	@Override
 	protected String getClientName(int id) {
 		Optional<Player> oPlayer = this.playerMap.get(id); 
-		if(!oPlayer.isPresent()) return super.getClientName(id); 
+		if(oPlayer == null || !oPlayer.isPresent()) return super.getClientName(id); 
 		Player player = oPlayer.get(); 
 		return String.format("Player %s (%d) ", player.getName(), player.getConnectionID()); 
 	}
