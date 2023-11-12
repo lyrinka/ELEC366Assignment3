@@ -16,9 +16,9 @@ public class GraphicalClientLauncher implements Runnable {
 	
 	private final IClientGUI ui;
 	
-	public GraphicalClientLauncher(ConnectionInformation conn) {
+	public GraphicalClientLauncher(ConnectionInformation conn, boolean verbose) {
 		this.conn = conn; 
-		this.loggers = new Pair<>(LoggerUtil.createLogger("Client"), LoggerUtil.createLogger("Tracer")); 
+		this.loggers = new Pair<>(LoggerUtil.createLogger("Client"), verbose ? LoggerUtil.createLogger("Tracer") : null); 
 		this.ui = new ClientGUI(); 
 	}
 	
@@ -26,21 +26,23 @@ public class GraphicalClientLauncher implements Runnable {
 	public void run() {
 		this.ui.onConnectionButton(this::onConnectButton);
 		this.ui.setState(IClientGUI.State.DISCONNECTED);
-		this.ui.clearChat();
 		this.ui.showUI();
 	}
 
 	protected void onConnectButton() {
 		String username = this.ui.getUsername().trim(); 
 		if(username.isEmpty()) return; 
+		this.ui.clearChat();
 		this.ui.setState(IClientGUI.State.CONNECTING);
-		(new GraphicalClient(
-				this.ui, 
-				username, 
-				this.conn, 
-				this.loggers, 
-				this::run
-		)).start(); 
+		new Thread(() -> {
+			(new GraphicalClient(
+					this.ui, 
+					username, 
+					this.conn, 
+					this.loggers, 
+					this::run
+			)).start(); 
+		}).start();
 	}
 	
 }

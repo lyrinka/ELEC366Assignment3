@@ -24,7 +24,7 @@ public enum FormatModifier implements IBaseModifier {
 	
 	@Override
 	public String getEscapeCode() {
-		return (char)0x18 + this.escapeSeq; 
+		return IBaseModifier.ESC + this.escapeSeq; 
 	}
 	
 	@Override

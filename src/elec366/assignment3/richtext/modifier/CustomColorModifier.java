@@ -31,7 +31,7 @@ public class CustomColorModifier implements IColorModifier {
 		int r = 0xFF & (this.color >> 24); 
 		int g = 0xFF & (this.color >> 16); 
 		int b = 0xFF &  this.color; 
-		return String.format((char)0x18 + "[38;2;%d;%d;%dm", r, g, b);
+		return String.format(IBaseModifier.ESC + "[38;2;%d;%d;%dm", r, g, b);
 	}
 	
 	@Override

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import elec366.assignment3.richtext.modifier.FormatModifier;
+
 public class RichText {
 	
 	private final List<RichTextSegment> segments; 
@@ -31,7 +33,7 @@ public class RichText {
 	}
 	
 	public String toConsoleString() {
-		return this.toString(RichTextSegment::toConsoleString);  
+		return this.toString(RichTextSegment::toConsoleString) + FormatModifier.RESET.getEscapeCode();  
 	}
 	
 	public String toString(Function<RichTextSegment, String> f) {

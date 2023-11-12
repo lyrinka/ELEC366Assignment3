@@ -3,6 +3,7 @@ package elec366.assignment3.client.app.console;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import elec366.assignment3.client.app.type.ConnectionInformation;
 import elec366.assignment3.client.gameplay.ChatClient;
 import elec366.assignment3.type.ChatMessageType;
 import elec366.assignment3.util.LoggerUtil;
@@ -11,8 +12,8 @@ public class ConsoleClient extends ChatClient {
 
 	private final ConsoleInputThread consoleInputThread;
 
-	public ConsoleClient(String username) {
-		super(LoggerUtil.createLogger("Client"), LoggerUtil.createLogger("Tracer"), "localhost", 14567, username);
+	public ConsoleClient(ConnectionInformation conn, boolean verbose, String username) {
+		super(LoggerUtil.createLogger("Client"), verbose ? LoggerUtil.createLogger("Tracer") : null, conn.getHost(), conn.getPort(), username);
 		this.consoleInputThread = new ConsoleInputThread(this); 
 	}
 
