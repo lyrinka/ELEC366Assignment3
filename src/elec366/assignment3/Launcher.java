@@ -1,19 +1,29 @@
 package elec366.assignment3;
 
-import elec366.assignment3.server.app.gui.frontend.IServerGUI;
-import elec366.assignment3.server.app.gui.frontend.ServerGUI;
+import elec366.assignment3.client.app.gui.GraphicalClientLauncher;
+import elec366.assignment3.client.app.type.ConnectionInformation;
+import elec366.assignment3.server.app.gui.GraphicalServerLauncher;
 
 public class Launcher {
 
 	public static void main(String args[]) throws InterruptedException {
 		
-		IServerGUI serverGUI = new ServerGUI(); 
-		serverGUI.showUI();
+		ConnectionInformation defaultConnectionInformation = 
+				new ConnectionInformation(
+						"localhost", 
+						14567
+		); 
 		
-		for(int i = 1; i <= 5; i++) {
-			Thread.sleep(1000);
-			serverGUI.setOnlinePlayers(new String[i]);
+		Runnable runnable; 
+		
+		if(args.length == 1) {
+			runnable = new GraphicalServerLauncher(defaultConnectionInformation.getPort()); 
 		}
+		else {
+			runnable = new GraphicalClientLauncher(defaultConnectionInformation); 
+		}
+		
+		runnable.run();
 		
 	}
 
