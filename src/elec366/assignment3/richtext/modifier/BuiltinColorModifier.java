@@ -42,7 +42,7 @@ public enum BuiltinColorModifier implements IColorModifier {
 	
 	@Override
 	public String getEscapeCode() {
-		return (char)0x18 + this.escapeSeq; 
+		return IBaseModifier.ESC + this.escapeSeq; 
 	}
 	
 	@Override
