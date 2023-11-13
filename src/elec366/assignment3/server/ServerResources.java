@@ -20,9 +20,14 @@ public class ServerResources {
 	
 	public static String COMMAND_ISSUE = "&7%s issued server command: %s"; 
 	
-	public static String COMMAND_UNKNOWN = "Unknown command. Try /help."; 
+	public static String COMMAND_UNKNOWN = "&7Unknown command. Try /help."; 
+	public static String COMMAND_INTERNAL_ERROR = "&c&lAn internal error has occured. Please contact server administorators.";
+	public static String COMMAND_EXECUTE_UNSUCCESSFUL = "&7Unknown command. Try /help %s."; 
 	
-	public static String COMMAND_HELP = "Help topic (todo)"; // TODO: write help; 
+	public static String COMMAND_HELP = "General help topic (todo)"; 
+	public static String COMMAND_HELP_ON_COMMAND_DEFAULT = "&fNo help for command &b&l%s&f."; 
+	public static String COMMAND_HELP_ON_COMMAND = "&fCommand &b&l%s&f: &r"; 
+	
 	
 	public static String COMMAND_STOP_PASSWORD = "&cYou need the stop password to stop the server!"; 
 	public static String COMMAND_STOP_SHUTDOWN = "&bStopping server..."; 
@@ -32,7 +37,8 @@ public class ServerResources {
 	public static String COMMAND_TELL_HELP = "Usage: /tell username message"; 
 	public static String COMMAND_TELL_OFFLINE = "The player is not online."; 
 	public static String COMMAND_TELL_SELF = "You cannot send messages to yourself!"; 
-	public static String COMMAND_TELL_MSG = "&b[%s &b-> %s&b]&r %s"; 
-	public static String COMMAND_TELL_MSG_YOU = "&cYou&r"; 
+	public static String COMMAND_TELL_MSG = "&f[%s&f -> %s&f]&r %s"; 
+	public static String COMMAND_TELL_MSG_OTHERS = "&b%s"; 
+	public static String COMMAND_TELL_MSG_YOU = "&cYou"; 
 	
 }

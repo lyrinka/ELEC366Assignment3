@@ -3,13 +3,15 @@ package elec366.assignment3.server.gameplay;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.richtext.RichTextParser;
 import elec366.assignment3.server.ServerResources;
 import elec366.assignment3.server.ServerSettings;
+import elec366.assignment3.server.gameplay.command.CommandExecutor;
+import elec366.assignment3.server.gameplay.command.CommandExecutorInstantiationException;
+import elec366.assignment3.server.gameplay.command.CommandType;
 import elec366.assignment3.type.ChatMessageType;
 import elec366.assignment3.util.SingleLineSanitizer;
 
@@ -92,14 +94,41 @@ public class ChatServer extends MultiplayerServer {
 		this.getLogger().info("[PLAY] " + formattedMessage);
 	}
 	
-	public void onPlayerCommand(Player player, String message) {
-		if(message.isEmpty()) {
+	public void onPlayerCommand(Player player, String rawInput) {
+		if(rawInput.isEmpty()) {
 			player.sendServerMessage(ServerResources.COMMAND_UNKNOWN);
 			return; 
 		}
-		String[] array0 = message.split(" ", 2); 
-		String command = array0[0]; 
-		String args = array0.length >= 2 ? array0[1] : ""; 
+		String[] array0 = rawInput.split(" ", 2); 
+		String label = array0[0]; 
+		String command = array0.length >= 2 ? array0[1] : ""; 
+		
+		CommandType type = CommandType.get(label); 
+		if(type == null) {
+			player.sendServerMessage(ServerResources.COMMAND_UNKNOWN);
+			return; 
+		}
+		CommandExecutor executor; 
+		try {
+			executor = type.construct(this, player, label, command, rawInput); 
+		}
+		catch(CommandExecutorInstantiationException ex) {
+			this.getLogger().warning("Exception while parsing " + rawInput);
+			ex.printStackTrace();
+			player.sendServerMessage(ServerResources.COMMAND_INTERNAL_ERROR);
+			return; 
+		}
+		boolean result = executor.execute(); 
+		if(!result) {
+			player.sendServerMessage(String.format(ServerResources.COMMAND_EXECUTE_UNSUCCESSFUL, label));
+			return; 
+		}
+		
+		
+		
+		
+		/*
+		
 		switch(command.toLowerCase()) {
 			default: {
 				player.sendServerMessage(ServerResources.COMMAND_UNKNOWN);
@@ -152,7 +181,7 @@ public class ChatServer extends MultiplayerServer {
 				receiver.sendMessage(ChatMessageType.CHAT_PRIVATE, msg3); 
 				return; 
 			}
-		}
+		}*/
 	}
 	
 }
