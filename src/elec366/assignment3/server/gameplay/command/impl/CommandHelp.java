@@ -17,7 +17,7 @@ public class CommandHelp extends CommandExecutor {
 
 	@Override
 	public String getHelpTopic() {
-		return ServerResources.COMMAND_HELP; 
+		return ServerResources.COMMAND_HELP.HELP; 
 	}
 	
 	@Override
@@ -36,9 +36,19 @@ public class CommandHelp extends CommandExecutor {
 		try {
 			String targetHelp = Objects.requireNonNull(target).construct(this.getServer(), this.getPlayer(), targetLabel, "", "").getHelpTopic();
 			if(Objects.requireNonNull(targetHelp).isEmpty()) throw new NullPointerException(); 
-			this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_HELP_ON_COMMAND, targetLabel) + targetHelp); 
+			String[] targetHelpLines = targetHelp.split("\r?\n"); 
+			boolean isFirst = true; 
+			for(String targetHelpLine : targetHelpLines) {
+				String message; 
+				if(isFirst) 
+					message = String.format(ServerResources.COMMAND_HELP.TOPIC_ON_COMMAND1, targetLabel, targetHelpLine); 
+				else
+					message = String.format(ServerResources.COMMAND_HELP.TOPIC_ON_COMMAND2, targetHelpLine); 
+				this.getPlayer().sendServerMessage(message); 
+				isFirst = false; 
+			}
 		} catch (NullPointerException | CommandExecutorInstantiationException ignored) {
-			this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_HELP_ON_COMMAND_DEFAULT, targetLabel));
+			this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_HELP.TOPIC_DEFAULT, targetLabel));
 			return; 
 		}
 	}

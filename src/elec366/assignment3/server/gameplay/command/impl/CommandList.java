@@ -15,14 +15,14 @@ public class CommandList extends CommandExecutor {
 	
 	@Override
 	public String getHelpTopic() {
-		return super.getHelpTopic(); 
+		return ServerResources.COMMAND_LIST.HELP; 
 	}
 
 	@Override
 	public boolean execute() {
 		String[] playerNames = this.getServer().getOnlinePlayerStream().map(Player::getName).toArray(String[]::new); 
-		this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_LIST_REPLY1, playerNames.length));
-		this.getPlayer().sendServerMessage(Arrays.toString(playerNames));
+		this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_LIST.MESSAGE1, playerNames.length));
+		this.getPlayer().sendServerMessage(String.format(ServerResources.COMMAND_LIST.MESSAGE2, Arrays.toString(playerNames)));
 		return true; 
 	}
 

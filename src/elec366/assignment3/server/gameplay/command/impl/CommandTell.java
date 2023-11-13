@@ -16,7 +16,7 @@ public class CommandTell extends CommandExecutor {
 	
 	@Override
 	public String getHelpTopic() {
-		return super.getHelpTopic(); 
+		return ServerResources.COMMAND_TELL.HELP; 
 	}
 
 	@Override
@@ -25,23 +25,23 @@ public class CommandTell extends CommandExecutor {
 		String senderName = this.getPlayer().getName(); 
 		String receiverName0 = this.getArg(1); 
 		if(receiverName0.equalsIgnoreCase(senderName)) {
-			this.getPlayer().sendServerMessage(ServerResources.COMMAND_TELL_SELF);
+			this.getPlayer().sendServerMessage(ServerResources.COMMAND_TELL.SELF);
 			return true; 
 		}
 		Optional<Player> oPlayer = this.getServer().getOnlinePlayerStream().filter(p -> p.getName().equalsIgnoreCase(receiverName0)).findAny(); 
 		if(!oPlayer.isPresent()) {
-			this.getPlayer().sendServerMessage(ServerResources.COMMAND_TELL_OFFLINE);
+			this.getPlayer().sendServerMessage(ServerResources.COMMAND_TELL.OFFLINE);
 			return true; 
 		}
 		Player receiver = oPlayer.get(); 
 		String receiverName = receiver.getName(); 
-		senderName   = String.format(ServerResources.COMMAND_TELL_MSG_OTHERS, senderName); 
-		receiverName = String.format(ServerResources.COMMAND_TELL_MSG_OTHERS, receiverName); 
-		String yourName = ServerResources.COMMAND_TELL_MSG_YOU; 
+		senderName   = String.format(ServerResources.COMMAND_TELL.FORMAT_OTHERS, senderName); 
+		receiverName = String.format(ServerResources.COMMAND_TELL.FORMAT_OTHERS, receiverName); 
+		String yourName = ServerResources.COMMAND_TELL.FORMAT_YOU; 
 		String content = this.getCommand().split(" ", 2)[1]; 
-		String msg1 = String.format(ServerResources.COMMAND_TELL_MSG, senderName, receiverName, content); 
-		String msg2 = String.format(ServerResources.COMMAND_TELL_MSG, yourName,   receiverName, content);
-		String msg3 = String.format(ServerResources.COMMAND_TELL_MSG, senderName, yourName,     content);
+		String msg1 = String.format(ServerResources.COMMAND_TELL.MESSAGE, senderName, receiverName, content); 
+		String msg2 = String.format(ServerResources.COMMAND_TELL.MESSAGE, yourName,   receiverName, content);
+		String msg3 = String.format(ServerResources.COMMAND_TELL.MESSAGE, senderName, yourName,     content);
 		this.getServer().logMessage(msg1);
 		this.getPlayer().sendMessage(ChatMessageType.CHAT_PRIVATE, msg2);
 		receiver.sendMessage(ChatMessageType.CHAT_PRIVATE, msg3); 
