@@ -27,7 +27,7 @@ public class Launcher {
 		
 		while(it.hasNext()) {
 			String arg = it.next(); 
-			switch(arg.toLowerCase()) {
+			switch(arg) {
 				case "-server": 
 				case "-s": {
 					entry = v -> new GraphicalServerLauncher(conn.getPort(), v).run(); 
