@@ -19,6 +19,7 @@ public interface IClientGUI {
 	
 	// User interface state
 	void showUI(); 
+	void closeUI(); 
 	
 	// User interface state
 	void setState(State state); 

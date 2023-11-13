@@ -43,6 +43,11 @@ public class ServerGUI implements IServerGUI {
 	}
 
 	@Override
+	public void closeUI() {
+		this.frame.dispose();
+	}
+
+	@Override
 	public void setOnlinePlayers(String[] players) {
 		if(players.length == 0) {
 			// Set as red "No Clients Connected"
@@ -54,7 +59,6 @@ public class ServerGUI implements IServerGUI {
 			this.connectionLabel.setForeground(Color.blue);
 			this.connectionLabel.setText(players.length + " Clients Connected");
 		}
-		
 	}
 
 }

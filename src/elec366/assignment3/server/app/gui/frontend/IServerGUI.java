@@ -4,9 +4,10 @@ public interface IServerGUI {
 	
 	// User interface state
 	void showUI(); 
+	void closeUI(); 
 	
 	// UI writes - Set online players
 	// (If the UI only displays the number of online players, use the length of this array.)
-	void setOnlinePlayers(String[] players); 
+	void setOnlinePlayers(String[] players);
 	
 }

@@ -63,7 +63,8 @@ public class GraphicalClient extends ChatClient {
 	}
 	
 	protected void onSendButton() {
-		String chat = this.ui.getMessage(); 
+		String chat = this.ui.getMessage();
+		if(chat.isEmpty()) return; 
 		String recepient = this.ui.getRecepient(); 
 		if(recepient.isEmpty() || recepient.equals("<everyone>")) {
 			this.sendChatMessage(chat);
@@ -72,6 +73,7 @@ public class GraphicalClient extends ChatClient {
 			String command = String.format("/tell %s %s", recepient, chat); 
 			this.sendChatMessage(command);
 		}
+		this.ui.setMessageFocus();
 	}
 	
 	protected void onDisconnectionButton() {
