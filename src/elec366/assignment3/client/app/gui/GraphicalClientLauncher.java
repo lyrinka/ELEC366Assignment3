@@ -11,7 +11,7 @@ import elec366.assignment3.util.Pair;
 
 public class GraphicalClientLauncher implements Runnable {
 
-	private final ConnectionInformation conn; 
+	private ConnectionInformation conn; 
 	private final Pair<Logger, Logger> loggers;
 	
 	private final IClientGUI ui;
@@ -25,13 +25,29 @@ public class GraphicalClientLauncher implements Runnable {
 	@Override
 	public void run() {
 		this.ui.onConnectionButton(this::onConnectButton);
+		this.ui.setServerAddress(conn.getHost() + ":" + conn.getPort());
 		this.ui.setState(IClientGUI.State.DISCONNECTED);
 		this.ui.showUI();
 	}
 
 	protected void onConnectButton() {
+		String addrRaw = this.ui.getServerAddress(); 
+		String[] addrSplit = addrRaw.split(":", 2); 
+		try {
+			this.conn = new ConnectionInformation(addrSplit[0], Integer.parseInt(addrSplit[1])); 
+			if(this.conn.getHost().isEmpty()) throw new IllegalArgumentException(); 
+		}
+		catch(ArrayIndexOutOfBoundsException | IllegalArgumentException ignored) {
+			this.ui.displayDialog(null, "The server address is invalid.");
+			return; 
+		}
+		
 		String username = this.ui.getUsername().trim(); 
-		if(username.isEmpty()) return; 
+		if(username.isEmpty()) {
+			this.ui.displayDialog(null, "Please enter a username.");
+			return; 
+		}
+		
 		this.ui.clearChat();
 		this.ui.setState(IClientGUI.State.CONNECTING);
 		new Thread(() -> {

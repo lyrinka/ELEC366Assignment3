@@ -30,6 +30,9 @@ public interface IClientGUI {
 	// Generic - Change application title
 	void setApplicationTitle(String applicationTitle); 
 	
+	// UI writes - Set default address of target server
+	void setServerAddress(String address); 
+	
 	// UI writes - Append text to chat box
 	void clearChat(); 
 	void appendChat(String appendedLine); 
@@ -42,6 +45,9 @@ public interface IClientGUI {
 	
 	// UI writes - Clear message text box and regain focus
 	void setMessageFocus(); 
+	
+	// UI reads - Get server address/port
+	String getServerAddress(); 
 	
 	// UI reads - Get player provided user name
 	String getUsername(); 

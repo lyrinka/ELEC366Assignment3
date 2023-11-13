@@ -7,15 +7,20 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.util.SingleLineSanitizer;
 
 public class ClientGUI implements IClientGUI {
 
 	private final JFrame frame; 
+	private final JLabel labelAddressName; 
+	private final JTextField textfieldAddressName;
 	private final JLabel labelClientName; 
 	private final JTextField textfieldClientName; 
 	private final JButton buttonconnect; 
@@ -26,7 +31,7 @@ public class ClientGUI implements IClientGUI {
 	private final JButton buttonSend;
 	
 	private Runnable onConnectionButtonCallback;
-	private Runnable onSendButtonCallback; 
+	private Runnable onSendButtonCallback;
 	
 	public ClientGUI() {
 		
@@ -36,23 +41,40 @@ public class ClientGUI implements IClientGUI {
 		frame.setTitle("Chatting Client");
 		frame.getContentPane().setLayout(null);
 		
+		//For some reason it made me add the type here.. did you create the labels somewhere else?
+		//need to see if this will fit properly
+		labelAddressName = new JLabel("Server Address: ");
+		labelAddressName.setBounds(10, 20, 200, 20);
+		labelAddressName.setFont(new Font("Times", Font.BOLD, 12));
+		labelAddressName.setHorizontalAlignment(SwingConstants.LEFT);
+		labelAddressName.setVerticalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(labelAddressName);
+		
+		textfieldAddressName = new JTextField();
+		textfieldAddressName.setFont(new Font("Times", Font.BOLD, 12));
+		textfieldAddressName.setBounds(115, 20, 180, 20); // x axis, y axis, width, height
+		frame.getContentPane().add(textfieldAddressName);
 		
 		labelClientName = new JLabel("Client Name: "); 
-		labelClientName.setBounds(10, 50, 300, 30);
+		labelClientName.setBounds(10, 50, 100, 30);
 		labelClientName.setFont(new Font("Times", Font.BOLD, 12));
 		labelClientName.setHorizontalAlignment(SwingConstants.LEFT);
 		labelClientName.setVerticalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(labelClientName);
 		
 		
+		// TODO: this text is a bit clipped
+		//Should no longer be clipped but it needs to be tested 
 		textfieldClientName = new JTextField();
 		textfieldClientName.setFont(new Font("Times", Font.BOLD, 12));
-		textfieldClientName.setBounds(100, 55, 120, 20); // x axis, y axis, width, height
+		textfieldClientName.setBounds(90, 55, 125, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldClientName);
 		
 		
+		// TODO: The button is not wide enough to display "Connecting.."
+		//It should be wide enough now
 		buttonconnect = new JButton("Connect");
-		buttonconnect.setBounds(230, 55, 100, 20);// x axis, y axis, width, height
+		buttonconnect.setBounds(230, 55, 170, 20);// x axis, y axis, width, height 
 		buttonconnect.addActionListener(ignored -> {
 			if(this.onConnectionButtonCallback == null) return; 
 			this.onConnectionButtonCallback.run(); 
@@ -60,12 +82,21 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(buttonconnect);
 		
 		
+		// TODO: wrapping and scrolling ->wrapping and scrolling should be okay now
+		// TODO: right click menu -> what I found to support right clicks https://stackoverflow.com/questions/35513767/right-click-focus-in-swing
+		// TODO: rich text improvement -> I think we need to add a text pane for this to work -> example from online https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
 		textAreaDisplay = new JTextArea();
-		textAreaDisplay.setBounds(10, 90, 350, 300);
+		textAreaDisplay.setBounds(10, 90, 400, 300);
 		frame.getContentPane().add(textAreaDisplay);
+		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		frame.getContentPane().repaint(); 
-		textAreaDisplay.setEditable(false); 
-		
+		textAreaDisplay.setEditable(false);
+		JScrollPane scroller1 = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well
+		scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(scroller1); //This broke the main function for som
+		scroller1.setVisible(true);
+		//scroller.getViewport().add(editor);
+	    //topPanel.add(scroller, BorderLayout.CENTER);
 		
 		//need to use the users entered name here
 		//Set up an if connected function the following appears, If not connected the above appears
@@ -80,18 +111,21 @@ public class ClientGUI implements IClientGUI {
 		//Create the array or arrays and convert it to strings so it can be added to the combo box
 		//an example to see it works
 		names = new JComboBox<String>(); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
-		names.setBounds(80, 390, 300, 30);
+		names.setBounds(100, 390, 300, 30);
 		names.setFont(new Font("Times", Font.BOLD, 12));
 		frame.getContentPane().add(names);
 		
 		
+		// TODO: limit text to single line
+		// TODO: press enter to send (same effect as pressing the send button)
 		textAreaSend = new JTextArea();
-		textAreaSend.setBounds(10, 430, 300, 80);
+		textAreaSend.setBounds(10, 460, 300, 80);
 		frame.getContentPane().add(textAreaSend);
+		textAreaSend.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		
 		
 		buttonSend = new JButton("Send");
-		buttonSend.setBounds(330, 460, 100, 20);// x axis, y axis, width, height
+		buttonSend.setBounds(350, 490, 100, 20);// x axis, y axis, width, height
 		buttonSend.addActionListener(ignored -> {
 			if(this.onSendButtonCallback == null) return; 
 			this.onSendButtonCallback.run();
@@ -139,6 +173,7 @@ public class ClientGUI implements IClientGUI {
 				this.buttonconnect.setText("Connect");
 				this.buttonconnect.setEnabled(true);
 				this.textfieldClientName.setEnabled(true);
+				this.textfieldAddressName.setEnabled(true);
 				showSendUI = false; 
 				this.setOnlinePlayers(new String[0]);
 				this.textAreaSend.setText("");
@@ -148,6 +183,7 @@ public class ClientGUI implements IClientGUI {
 				this.buttonconnect.setText("Connecting..");
 				this.buttonconnect.setEnabled(false);
 				this.textfieldClientName.setEnabled(false);
+				this.textfieldAddressName.setEnabled(false);
 				showSendUI = false; 
 				break; 
 			}
@@ -155,6 +191,7 @@ public class ClientGUI implements IClientGUI {
 				this.buttonconnect.setText("Disconnect");
 				this.buttonconnect.setEnabled(true);
 				this.textfieldClientName.setEnabled(false);
+				this.textfieldAddressName.setEnabled(false);
 				showSendUI = true; 
 				break;
 			}
@@ -179,14 +216,27 @@ public class ClientGUI implements IClientGUI {
 	}
 
 	@Override
+	public void setServerAddress(String address) {
+		if(address == null) return; 
+		this.textfieldAddressName.setText(address);
+	}
+	
+	@Override
 	public void clearChat() {
+		// TODO: related to rich text improvement
 		this.textAreaDisplay.setText("");
 	}
 
 	@Override
 	public void appendChat(String appendedLine) {
+		// TODO: related to rich text improvement
 		if(appendedLine == null) return; 
 		this.textAreaDisplay.append(SingleLineSanitizer.sanitize(appendedLine) + "\n");
+	}
+	
+	public void appendChat(RichText appendedLine) {
+		// TODO: related to rich text improvement
+		this.appendChat(appendedLine.toString());
 	}
 
 	@Override
@@ -218,6 +268,11 @@ public class ClientGUI implements IClientGUI {
 		this.textAreaSend.requestFocus();
 	}
 
+	@Override
+	public String getServerAddress() {
+		return this.textfieldAddressName.getText().trim(); 
+	}
+	
 	@Override
 	public String getUsername() {
 		return this.textfieldClientName.getText().trim(); 
