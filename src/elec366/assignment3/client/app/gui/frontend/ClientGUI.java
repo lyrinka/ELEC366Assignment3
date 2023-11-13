@@ -49,7 +49,7 @@ public class ClientGUI implements IClientGUI {
 		labelAddressName.setVerticalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(labelAddressName);
 		
-		textfieldAddressName = new JTextField("localhost:14567");
+		textfieldAddressName = new JTextField();
 		textfieldAddressName.setFont(new Font("Times", Font.BOLD, 12));
 		textfieldAddressName.setBounds(115, 20, 180, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldAddressName);
@@ -205,6 +205,12 @@ public class ClientGUI implements IClientGUI {
 		this.frame.setTitle(applicationTitle);
 	}
 
+	@Override
+	public void setServerAddress(String address) {
+		if(address == null) return; 
+		this.textfieldAddressName.setText(address);
+	}
+	
 	@Override
 	public void clearChat() {
 		// TODO: related to rich text improvement

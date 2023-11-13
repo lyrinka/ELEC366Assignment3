@@ -29,6 +29,9 @@ public interface IClientGUI {
 	// Generic - Change application title
 	void setApplicationTitle(String applicationTitle); 
 	
+	// UI writes - Set default address of target server
+	void setServerAddress(String address); 
+	
 	// UI writes - Append text to chat box
 	void clearChat(); 
 	void appendChat(String appendedLine); 
