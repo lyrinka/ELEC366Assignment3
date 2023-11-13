@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import elec366.assignment3.richtext.RichText;
@@ -90,7 +91,10 @@ public class ClientGUI implements IClientGUI {
 		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		frame.getContentPane().repaint(); 
 		textAreaDisplay.setEditable(false);
-		JScrollPane scroller1 = new JScrollPane(); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well
+		JScrollPane scroller1 = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well
+		scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(scroller1); //This broke the main function for som
+		scroller1.setVisible(true);
 		//scroller.getViewport().add(editor);
 	    //topPanel.add(scroller, BorderLayout.CENTER);
 		
@@ -107,7 +111,7 @@ public class ClientGUI implements IClientGUI {
 		//Create the array or arrays and convert it to strings so it can be added to the combo box
 		//an example to see it works
 		names = new JComboBox<String>(); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
-		names.setBounds(80, 390, 300, 30);
+		names.setBounds(100, 390, 300, 30);
 		names.setFont(new Font("Times", Font.BOLD, 12));
 		frame.getContentPane().add(names);
 		
@@ -115,12 +119,13 @@ public class ClientGUI implements IClientGUI {
 		// TODO: limit text to single line
 		// TODO: press enter to send (same effect as pressing the send button)
 		textAreaSend = new JTextArea();
-		textAreaSend.setBounds(10, 430, 300, 80);
+		textAreaSend.setBounds(10, 460, 300, 80);
 		frame.getContentPane().add(textAreaSend);
+		textAreaSend.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		
 		
 		buttonSend = new JButton("Send");
-		buttonSend.setBounds(330, 460, 100, 20);// x axis, y axis, width, height
+		buttonSend.setBounds(350, 490, 100, 20);// x axis, y axis, width, height
 		buttonSend.addActionListener(ignored -> {
 			if(this.onSendButtonCallback == null) return; 
 			this.onSendButtonCallback.run();
