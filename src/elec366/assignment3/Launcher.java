@@ -12,6 +12,8 @@ import elec366.assignment3.util.ArrayIterator;
 
 public class Launcher {
 
+	private static final boolean defaultLaunchServer = false; 
+	
 	public static void main(String args[]) throws InterruptedException {
 		
 		final ConnectionInformation conn = 
@@ -86,7 +88,13 @@ public class Launcher {
 			}
 		}
 		
-		if(entry == null) entry = v -> new GraphicalClientLauncher(conn, v).run(); 
+		if(entry == null) {
+			if(!defaultLaunchServer)
+				entry = v -> new GraphicalClientLauncher(conn, v).run(); 
+			else 
+				entry = v -> new GraphicalServerLauncher(conn.getPort(), v).run(); 
+		}
+		
 		entry.accept(verbose);
 		
 	}

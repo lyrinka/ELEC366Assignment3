@@ -14,18 +14,19 @@ public class CommandStop extends CommandExecutor {
 
 	@Override
 	public String getHelpTopic() {
-		return super.getHelpTopic(); 
+		return ServerResources.COMMAND_STOP.HELP1 + "\n"
+			 + ServerResources.COMMAND_STOP.HELP2; 
 	}
 	
 	@Override
 	public boolean execute() {
 		if(ServerSettings.STOP_PASSWORD.isEmpty() || (this.hasArg(1) && ServerSettings.STOP_PASSWORD.equals(this.getArg(1)))) {
-			this.getServer().logMessage(ServerResources.COMMAND_STOP_SHUTDOWN);
-			this.getPlayer().sendServerMessage(ServerResources.COMMAND_STOP_SHUTDOWN);
+			this.getServer().logMessage(ServerResources.COMMAND_STOP.SHUTTING_DOWN);
+			this.getPlayer().sendServerMessage(ServerResources.COMMAND_STOP.SHUTTING_DOWN);
 			this.getServer().shutdown();
 		}
 		else {
-			this.getPlayer().sendServerMessage(ServerResources.COMMAND_STOP_PASSWORD);
+			this.getPlayer().sendServerMessage(ServerResources.COMMAND_STOP.PASSWORD_REQUIRED);
 		}
 		return true; 
 	}
