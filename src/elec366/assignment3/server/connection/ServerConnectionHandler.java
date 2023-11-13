@@ -20,6 +20,7 @@ import elec366.assignment3.network.sdu.UpstreamDisconnectionSDU;
 import elec366.assignment3.network.sdu.UpstreamSDU;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
+import elec366.assignment3.util.Flag;
 import elec366.assignment3.util.Pair;
 
 public class ServerConnectionHandler {
@@ -92,11 +93,14 @@ public class ServerConnectionHandler {
 	
 	private void runServer() throws IOException {
 		
+		Flag closureFlag = new Flag(); 
+		
 		try (ServerSocket listener = new ServerSocket(this.port)) {
 			
 			this.closureCallback = () -> {
 				try {
 					listener.close();
+					closureFlag.setFlag(true);
 				} catch (IOException ignored) {
 					
 				} 
@@ -114,11 +118,8 @@ public class ServerConnectionHandler {
 					socket = listener.accept(); 
 				}
 				catch(IOException ex) {
-					if(ex instanceof SocketException) {
-						if(!ex.getMessage().equals("Socket closed")) 
-							ex.printStackTrace();
+					if(ex instanceof SocketException && closureFlag.getFlag())
 						break; 
-					}
 					throw ex; 
 				}
 				

@@ -29,9 +29,14 @@ public class GraphicalServer extends ChatServer {
 		this.updateOnlinePlayers();
 	}
 	
-	
 	public void updateOnlinePlayers() {
-		this.ui.setOnlinePlayers(this.getOnlinePlayerStream().toArray(String[]::new));
+		this.ui.setOnlinePlayers(this.getOnlinePlayerStream().map(Player::getName).toArray(String[]::new));
+	}
+	
+	@Override
+	public void onServerQuit() {
+		super.onServerQuit(); 
+		this.ui.closeUI();
 	}
 	
 }

@@ -123,6 +123,11 @@ public class ClientGUI implements IClientGUI {
 	public void showUI() {
 		frame.setVisible(true);
 	}
+	
+	@Override
+	public void closeUI() {
+		frame.dispose();
+	}
 
 	@Override
 	public void setState(State state) {
