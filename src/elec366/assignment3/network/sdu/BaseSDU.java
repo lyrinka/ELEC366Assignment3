@@ -1,5 +1,14 @@
 package elec366.assignment3.network.sdu;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * SDUs are objects exchanged between upper layers and connection worker threads
+ * i.e. the connection object. 
+ * SDUs all receive a priority to support priority packet scheduling and QoS control. 
+ * However, due to an unforeseen issue with Java built-in priority queues, 
+ * a strict FIFO queue is employed, thus the priorities are not used.
+ */
 public class BaseSDU implements Comparable<BaseSDU> {
 
 	public static enum Priority {

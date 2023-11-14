@@ -24,6 +24,23 @@ import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * Connection workers are the core to all server-client interactions and utilizes multi-threading. 
+ * A connection represents a bidirectional connection to a peer. 
+ * The connection is a bidirectional PDU (packet) connection where the peers communication using packets. 
+ * The connection operates on an already-opened socket, and is applicable to server and client. 
+ * 
+ * PDUs, commands (such as connection, disconnection and encryption ciphers), and various status
+ * is exchanged between the connection and upper layers through service data unit objects (SDUs). 
+ * SDUs from upper layer to the connection are referred to as downstream SDUs. 
+ * SDUs from connection to the upper layers are referred to as upstream SDUs. 
+ * Thread-safe queues are used to safely exchange these SDUs. 
+ * 
+ * Each connection creates two threads, one for sending (Tx) and one for receiving (Rx). 
+ * The thread logs verbose network details in a dedicated network logger provided by the upper layers. 
+ */
 public class Connection {
 
 	private static final String RX_TAG = "ConnectionWorker-%s-RX"; 
