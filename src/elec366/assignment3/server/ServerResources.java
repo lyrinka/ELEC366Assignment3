@@ -1,5 +1,10 @@
 package elec366.assignment3.server;
 
+/*
+ * This class applies to only server.
+ * 
+ * All server strings are organized here for easier access and internationalization support.
+ */
 public class ServerResources {
 
 	public static class LOGIN {

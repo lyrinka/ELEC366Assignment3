@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+/*
+ * This class applies to only server.
+ * 
+ * This is the concrete implementation of server-side GUI. 
+ */
 public class ServerGUI implements IServerGUI {
 
 	private final JFrame frame; 

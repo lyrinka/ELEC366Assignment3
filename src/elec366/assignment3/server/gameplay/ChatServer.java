@@ -15,6 +15,13 @@ import elec366.assignment3.server.gameplay.command.CommandType;
 import elec366.assignment3.type.ChatMessageType;
 import elec366.assignment3.util.SingleLineSanitizer;
 
+/*
+ * This class applies to only server.
+ * 
+ * The chat server is the 5th application layer, and the final layer for networking. 
+ * The chat server handles player chats, command issues, connections and disconnections. 
+ * Chat application related functionalities are all concentrated here. 
+ */
 public class ChatServer extends MultiplayerServer {
 
 	public static boolean USE_CONSOLE_CODE = true; 

@@ -6,6 +6,13 @@ import elec366.assignment3.server.gameplay.ChatServer;
 import elec366.assignment3.server.gameplay.Player;
 import elec366.assignment3.server.gameplay.command.CommandExecutor;
 
+/*
+ * This class applies to only server.
+ * 
+ * Stop command:
+ * - /stop				Stops the server, if the server has no stop password.
+ * - /stop <password>	Stops the server when password matches, if the server has a stop password.
+ */
 public class CommandStop extends CommandExecutor {
 
 	public CommandStop(ChatServer server, Player player, String label, String command, String rawInput) {

@@ -1,5 +1,10 @@
 package elec366.assignment3.server.app.gui.frontend;
 
+/*
+ * This interface applies to only server.
+ * 
+ * Denotes that the implementing class holds an implementation of server-side GUI. 
+ */
 public interface IServerGUI {
 	
 	// User interface state

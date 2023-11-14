@@ -3,6 +3,13 @@ package elec366.assignment3.server.gameplay.command;
 import elec366.assignment3.server.gameplay.ChatServer;
 import elec366.assignment3.server.gameplay.Player;
 
+/*
+ * This class applies to only server.
+ * 
+ * A command executor wraps an executable command in context. 
+ * Context refers to the server and the issuing player. 
+ * The execute method, when invoked, will perform all logic that the command will do. 
+ */
 public abstract class CommandExecutor {
 
 	private final ChatServer server; 

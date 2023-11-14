@@ -23,6 +23,19 @@ import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
 import elec366.assignment3.util.Flag;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only server.
+ * 
+ * The server connection handler is the 1st application layer of networking. 
+ * The connection handler has its own thread and 
+ * accepts inbound TCP connections and instantiates connection workers. 
+ * Each inbound connection is assigned a connection ID to identify the client. 
+ * The connection handler also removes disconnected clients. 
+ * 
+ * The connection handler dispatches downstream SDUs to the correct worker, 
+ * and combines upstream SDUs of multiple clients into a single queue. 
+ * The distinguishment between the clients is done by the assigned unique connection ID. 
+ */
 public class ServerConnectionHandler {
 
 	private static final String TAG = "ServerConnectionHandler"; 
