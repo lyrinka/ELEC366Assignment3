@@ -1,6 +1,9 @@
 package elec366.assignment3.client.app.gui.frontend;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -10,8 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.text.StyledDocument;
 
 import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.util.SingleLineSanitizer;
@@ -24,11 +29,14 @@ public class ClientGUI implements IClientGUI {
 	private final JLabel labelClientName; 
 	private final JTextField textfieldClientName; 
 	private final JButton buttonconnect; 
-	private final JTextArea textAreaDisplay; 
+	private final JTextPane textAreaDisplay; 
+	private final JScrollPane textAreaScroller;
 	private final JLabel labelSend; 
 	private final JComboBox<String> names; 
 	private final JTextArea textAreaSend; 
 	private final JButton buttonSend;
+	
+	private final StyleManager styleManager; 
 	
 	private Runnable onConnectionButtonCallback;
 	private Runnable onSendButtonCallback;
@@ -85,18 +93,15 @@ public class ClientGUI implements IClientGUI {
 		// TODO: wrapping and scrolling ->wrapping and scrolling should be okay now
 		// TODO: right click menu -> what I found to support right clicks https://stackoverflow.com/questions/35513767/right-click-focus-in-swing
 		// TODO: rich text improvement -> I think we need to add a text pane for this to work -> example from online https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
-		textAreaDisplay = new JTextArea();
-		textAreaDisplay.setBounds(10, 90, 400, 300);
-		frame.getContentPane().add(textAreaDisplay);
-		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
-		frame.getContentPane().repaint(); 
+		// Source: https://stackoverflow.com/questions/6068398/how-to-add-text-different-color-on-jtextpane
+		textAreaDisplay = new JTextPane();
+//		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		textAreaDisplay.setEditable(false);
-		JScrollPane scroller1 = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well
-		scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(scroller1); //This broke the main function for som
-		scroller1.setVisible(true);
-		//scroller.getViewport().add(editor);
-	    //topPanel.add(scroller, BorderLayout.CENTER);
+		
+		textAreaScroller = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well4
+		textAreaScroller.setBounds(10, 90, 400, 300);
+		textAreaScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(textAreaScroller); 
 		
 		//need to use the users entered name here
 		//Set up an if connected function the following appears, If not connected the above appears
@@ -124,6 +129,32 @@ public class ClientGUI implements IClientGUI {
 		textAreaSend.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		
 		
+		textAreaSend.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				//e.getKeyCode();
+				int keyCode = e.getKeyCode();
+				if (keyCode==10) {
+					e.consume();
+					if(onSendButtonCallback != null)
+						onSendButtonCallback.run();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+			}
+			
+		}); 
+		
+		
 		buttonSend = new JButton("Send");
 		buttonSend.setBounds(350, 490, 100, 20);// x axis, y axis, width, height
 		buttonSend.addActionListener(ignored -> {
@@ -132,6 +163,7 @@ public class ClientGUI implements IClientGUI {
 		});
 		frame.getContentPane().add(buttonSend);
 		
+		this.styleManager = new StyleManager(); 
 		
 		this.setState(IClientGUI.DEFAULT_STATE);
 		
@@ -223,20 +255,21 @@ public class ClientGUI implements IClientGUI {
 	
 	@Override
 	public void clearChat() {
-		// TODO: related to rich text improvement
 		this.textAreaDisplay.setText("");
 	}
 
 	@Override
 	public void appendChat(String appendedLine) {
-		// TODO: related to rich text improvement
 		if(appendedLine == null) return; 
-		this.textAreaDisplay.append(SingleLineSanitizer.sanitize(appendedLine) + "\n");
+		StyledDocument doc = this.textAreaDisplay.getStyledDocument(); 
+		this.styleManager.addText(doc, appendedLine);
+		this.styleManager.addNewLine(doc);
 	}
 	
 	public void appendChat(RichText appendedLine) {
-		// TODO: related to rich text improvement
-		this.appendChat(appendedLine.toString());
+		StyledDocument doc = this.textAreaDisplay.getStyledDocument(); 
+		this.styleManager.addRichText(doc, appendedLine);
+		this.styleManager.addNewLine(doc);
 	}
 
 	@Override
