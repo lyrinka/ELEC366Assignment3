@@ -1,5 +1,11 @@
 package elec366.assignment3.richtext.modifier;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * Represents a color modifier that can set the color of the text
+ * to one of the 16 built-in colors. 
+ */
 public enum BuiltinColorModifier implements IColorModifier {
 	
 	BLACK		('0', 0x000000, "[30m"), 

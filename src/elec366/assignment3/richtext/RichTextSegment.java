@@ -7,6 +7,13 @@ import elec366.assignment3.richtext.modifier.FormatModifier;
 import elec366.assignment3.richtext.modifier.IBaseModifier;
 import elec366.assignment3.richtext.modifier.IColorModifier;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * Represents a segment of text in a rich text paragraph. 
+ * A segment of text has the same format - same color, same style, etc. 
+ * A segment is the minimum renderable unit of a rich text paragraph. 
+ */
 public class RichTextSegment {
 	
 	private static final IColorModifier DEFAULT_COLOR_MODIFIER = BuiltinColorModifier.BLACK; 

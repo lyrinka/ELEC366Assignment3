@@ -1,5 +1,16 @@
 package elec366.assignment3.richtext;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * A stateful parser that converts a string with embedded &-code modifiers
+ * into rich text format. 
+ * The parser treats any malformat or ambiguity as plain text 
+ * and does not throw exceptions nor fail. 
+ * 
+ * The rich text parser is implemented as a static method. 
+ * The rich text parser object is used internally, with a private constructor. 
+ */
 import java.util.ArrayList;
 
 import elec366.assignment3.richtext.modifier.CustomColorModifier;

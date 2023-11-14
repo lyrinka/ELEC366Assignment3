@@ -1,5 +1,11 @@
 package elec366.assignment3.richtext.modifier;
 
+/*
+ * This class is common to server and client.
+ *  
+ * Represents a color modifier that can set the color of the text to a 24-bit RGB color. 
+ * Usage: &xABCDEF where ABCDEF is the hex code of the desired 24-bit color. 
+ */
 public class CustomColorModifier implements IColorModifier {
 
 	private static final char CODE = 'x';
