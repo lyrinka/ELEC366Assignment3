@@ -13,7 +13,7 @@ public class ServerGUI implements IServerGUI {
 	private final JLabel connectionLabel; 
 	
 	public ServerGUI() {
-		
+		//To create the server window 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,9 +21,7 @@ public class ServerGUI implements IServerGUI {
 		frame.getContentPane().setLayout(null);
 		
 		
-		//Not connected
-		//I was thinking we can add an if else statement? 
-		//I just wasn't super clear on how to set it up...
+		// To set the label red
 		connectionLabel = new JLabel("Text Color: Red"); 
 		connectionLabel.setForeground(Color.red);
 		connectionLabel.setBounds(100, 50, 300, 30); 
@@ -33,7 +31,7 @@ public class ServerGUI implements IServerGUI {
 		frame.getContentPane().add(connectionLabel);
 		
 		
-		this.setOnlinePlayers(new String[0]);
+		this.setOnlinePlayers(new String[0]); //To set the number of players to zero
 		
 	}
 
@@ -55,7 +53,7 @@ public class ServerGUI implements IServerGUI {
 			this.connectionLabel.setText("No Clients Connected");
 		}
 		else {
-			// set as blue "N Clients Connected
+			// set as blue "N Clients Connected"
 			this.connectionLabel.setForeground(Color.blue);
 			this.connectionLabel.setText(players.length + " Clients Connected");
 		}
