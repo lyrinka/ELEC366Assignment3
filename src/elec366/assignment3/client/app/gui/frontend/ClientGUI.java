@@ -133,16 +133,10 @@ public class ClientGUI implements IClientGUI {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int keyCode = e.getKeyCode();
-<<<<<<< Updated upstream
-				if (keyCode==10) {
-					e.consume();
-					if(onSendButtonCallback != null)
-						onSendButtonCallback.run();
-=======
 				if (keyCode==10) { //Int 10 is the code for the enter button
+					e.consume();
 					if(onSendButtonCallback != null) //if enter is not pushed nothing happens
 						onSendButtonCallback.run(); // if button is pressed backend is invoked
->>>>>>> Stashed changes
 				}
 			}
 
