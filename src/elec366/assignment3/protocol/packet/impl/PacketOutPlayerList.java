@@ -8,6 +8,16 @@ import elec366.assignment3.protocol.serdes.PayloadDeserializer;
 import elec366.assignment3.protocol.serdes.PayloadSerializer;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This packet is sent by the server to the client
+ * to reflect the usernames (including the recipient client)
+ * of currently online users. 
+ * 
+ * This packet is sent by the server on demand (PacketInQueryPlayerList)
+ * or when any player logins or disconnects. 
+ */
 public class PacketOutPlayerList extends Packet.Out {
 	
 	private final String[] playerList; 

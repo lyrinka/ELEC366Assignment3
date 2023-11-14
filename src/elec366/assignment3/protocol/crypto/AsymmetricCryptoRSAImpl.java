@@ -15,6 +15,14 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This class implements asymmetric encryption and decryption methods. 
+ * This class provides keypair generation, encryption and decryption facilities. 
+ * 
+ * Objects of this class are stateless. 
+ */
 public class AsymmetricCryptoRSAImpl implements IAsymmetricCrypto {
 	
 	AsymmetricCryptoRSAImpl() {
@@ -25,7 +33,7 @@ public class AsymmetricCryptoRSAImpl implements IAsymmetricCrypto {
 	public KeyPair generateKeypair() {
 		try {
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA"); 
-			kpg.initialize(2048);
+			kpg.initialize(2048); // 2048 bit RSA keypair
 			return kpg.generateKeyPair(); 
 		} 
 		catch(NoSuchAlgorithmException ex) {

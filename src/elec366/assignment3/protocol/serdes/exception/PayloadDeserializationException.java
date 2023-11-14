@@ -2,6 +2,14 @@ package elec366.assignment3.protocol.serdes.exception;
 
 import java.util.Arrays;
 
+/*
+ * This exception is common to server and client. 
+ * 
+ * Payload deserialization exception is the parent to all deserialization-related exceptions.
+ * Note that deserialization is different compared to decoding. 
+ * The exception carries additional fields containing the content of the
+ * exception-inducing packet for further debugging. 
+ */
 public class PayloadDeserializationException extends Exception {
 	
 	private static final long serialVersionUID = 9202965290980350916L;

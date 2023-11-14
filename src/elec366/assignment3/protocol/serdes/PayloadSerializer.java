@@ -3,6 +3,16 @@ package elec366.assignment3.protocol.serdes;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * The serializer writes bytes, numbers, arrays, strings, and other data structures
+ * to a stream of bytes, on demand, which is later extracted as a block of bytes (payload). 
+ * 
+ * The serializer is unbounded - no buffer pre-allocation is required and it does not throw exceptions. 
+ * 
+ * The deserializer is stateful and the serializing stream is provided by ByteArrayOutputStream. 
+ */
 public class PayloadSerializer {
 	
 	private final ByteArrayOutputStream outStream; 

@@ -10,11 +10,21 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This class implements symmetric encryption and decryption, 
+ * commonly referred as stream cipher. 
+ * 
+ * Objects of this class are stateful. 
+ * For a Tx/Rx thread pair, two ciphers are needed. 
+ */
 public class StreamCipherAESImpl implements IStreamCipher {
 
 	private final Cipher encrypt; 
 	private final Cipher decrypt; 
 	
+	// Pre-allocate buffers for memory efficiency
 	private final byte[] encryptBuffer1 = new byte[1]; 
 	private final byte[] encryptBuffer2 = new byte[1]; 
 	private final byte[] decryptBuffer1 = new byte[1]; 
@@ -25,6 +35,8 @@ public class StreamCipherAESImpl implements IStreamCipher {
 			SecretKeySpec keyObj = new SecretKeySpec(key, "AES"); 
 			IvParameterSpec ivObj = new IvParameterSpec(iv); 
 
+			// CFB8 has a feedback length of only 8 bits, effectively deriving
+			// a byte-oriented stream cipher from 16-byte AES block ciphers.
 			this.encrypt = Cipher.getInstance("AES/CFB8/NoPadding");
 			this.encrypt.init(Cipher.ENCRYPT_MODE, keyObj, ivObj); 
 		
