@@ -25,6 +25,7 @@ public class ClientGUI implements IClientGUI {
 	private final JTextField textfieldClientName; 
 	private final JButton buttonconnect; 
 	private final JTextArea textAreaDisplay; 
+	private final JScrollPane textAreaScroller;
 	private final JLabel labelSend; 
 	private final JComboBox<String> names; 
 	private final JTextArea textAreaSend; 
@@ -86,17 +87,13 @@ public class ClientGUI implements IClientGUI {
 		// TODO: right click menu -> what I found to support right clicks https://stackoverflow.com/questions/35513767/right-click-focus-in-swing
 		// TODO: rich text improvement -> I think we need to add a text pane for this to work -> example from online https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
 		textAreaDisplay = new JTextArea();
-		textAreaDisplay.setBounds(10, 90, 400, 300);
-		frame.getContentPane().add(textAreaDisplay);
 		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
-		frame.getContentPane().repaint(); 
 		textAreaDisplay.setEditable(false);
-		JScrollPane scroller1 = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well
-		scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(scroller1); //This broke the main function for som
-		scroller1.setVisible(true);
-		//scroller.getViewport().add(editor);
-	    //topPanel.add(scroller, BorderLayout.CENTER);
+		
+		textAreaScroller = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well4
+		textAreaScroller.setBounds(10, 90, 400, 300);
+		textAreaScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(textAreaScroller); 
 		
 		//need to use the users entered name here
 		//Set up an if connected function the following appears, If not connected the above appears
