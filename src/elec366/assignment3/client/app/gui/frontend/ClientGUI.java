@@ -13,8 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.text.StyledDocument;
 
 import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.util.SingleLineSanitizer;
@@ -27,12 +29,14 @@ public class ClientGUI implements IClientGUI {
 	private final JLabel labelClientName; 
 	private final JTextField textfieldClientName; 
 	private final JButton buttonconnect; 
-	private final JTextArea textAreaDisplay; 
+	private final JTextPane textAreaDisplay; 
 	private final JScrollPane textAreaScroller;
 	private final JLabel labelSend; 
 	private final JComboBox<String> names; 
 	private final JTextArea textAreaSend; 
 	private final JButton buttonSend;
+	
+	private final StyleManager styleManager; 
 	
 	private Runnable onConnectionButtonCallback;
 	private Runnable onSendButtonCallback;
@@ -89,8 +93,9 @@ public class ClientGUI implements IClientGUI {
 		// TODO: wrapping and scrolling ->wrapping and scrolling should be okay now
 		// TODO: right click menu -> what I found to support right clicks https://stackoverflow.com/questions/35513767/right-click-focus-in-swing
 		// TODO: rich text improvement -> I think we need to add a text pane for this to work -> example from online https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
-		textAreaDisplay = new JTextArea();
-		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
+		// Source: https://stackoverflow.com/questions/6068398/how-to-add-text-different-color-on-jtextpane
+		textAreaDisplay = new JTextPane();
+//		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		textAreaDisplay.setEditable(false);
 		
 		textAreaScroller = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well4
@@ -157,6 +162,7 @@ public class ClientGUI implements IClientGUI {
 		});
 		frame.getContentPane().add(buttonSend);
 		
+		this.styleManager = new StyleManager(); 
 		
 		this.setState(IClientGUI.DEFAULT_STATE);
 		
@@ -248,20 +254,21 @@ public class ClientGUI implements IClientGUI {
 	
 	@Override
 	public void clearChat() {
-		// TODO: related to rich text improvement
 		this.textAreaDisplay.setText("");
 	}
 
 	@Override
 	public void appendChat(String appendedLine) {
-		// TODO: related to rich text improvement
 		if(appendedLine == null) return; 
-		this.textAreaDisplay.append(SingleLineSanitizer.sanitize(appendedLine) + "\n");
+		StyledDocument doc = this.textAreaDisplay.getStyledDocument(); 
+		this.styleManager.addText(doc, appendedLine);
+		this.styleManager.addNewLine(doc);
 	}
 	
 	public void appendChat(RichText appendedLine) {
-		// TODO: related to rich text improvement
-		this.appendChat(appendedLine.toString());
+		StyledDocument doc = this.textAreaDisplay.getStyledDocument(); 
+		this.styleManager.addRichText(doc, appendedLine);
+		this.styleManager.addNewLine(doc);
 	}
 
 	@Override
@@ -314,9 +321,5 @@ public class ClientGUI implements IClientGUI {
 	public String getMessage() {
 		return SingleLineSanitizer.sanitize(this.textAreaSend.getText()); 
 	}
-	
-	public void keyPressed(KeyEvent enter) { // source https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
-        displayDialog(null, "Enter key pressed: Message Sent ");
-    }
 
 }
