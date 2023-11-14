@@ -10,6 +10,41 @@ import elec366.assignment3.server.app.console.ConsoleServer;
 import elec366.assignment3.server.app.gui.GraphicalServerLauncher;
 import elec366.assignment3.util.ArrayIterator;
 
+/*
+ * This is the application launcher. 
+ * Methods of launching:
+ * 
+ * - Double clicking the jar file launches the client UI.
+ * - Launching directly from Eclipse launches the client UI. 
+ * - Setting defaultLaunchServer to TRUE, launching directly from Eclipse launches the server UI. 
+ * 
+ * Command line options:
+ * -server, -s: 			launches the server GUI. 
+ * -client, -c: 			launches the client GUI. 
+ * -console-server, -S: 	launches a headless server. 
+ * -console-client, -C: 	launches a headless client.
+ * -verbose, -V:			enable additional logs.
+ * -host, -H <host>:		sets the default host for client
+ * -port, -P <port>:		sets the port for server, or the default port for client
+ * -stop-password, -SP <pass>: sets the stop password. without the stop password, a client cannot stop the server with the /stop command.
+ * 
+ * 
+ * Navigation:
+ * - GUI implementation: 				elec366.assignment3.client.app.gui.*
+ * 						 				elec366.assignment3.server.app.gui.*
+ * 
+ * - Connection handling and threading:	elec366.assignment3.network.Connection.java
+ * 										elec366.assignment3.client.connection.*
+ * 										elec366.assignment3.client.gameplay.*
+ * 										elec366.assignment3.server.connection.*
+ * 										elec366.assignment3.server.gameplay.*
+ * 
+ * - Packet handling:					elec366.assignment3.protocol.*
+ * 
+ * 
+ * Asides from GUI bonus implementations, this application features secure messaging by RSA and AES encryption.
+ * 
+ */
 public class Launcher {
 
 	private static final boolean defaultLaunchServer = false; 
