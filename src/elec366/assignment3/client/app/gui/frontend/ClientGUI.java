@@ -1,6 +1,9 @@
 package elec366.assignment3.client.app.gui.frontend;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -119,6 +122,31 @@ public class ClientGUI implements IClientGUI {
 		textAreaSend.setBounds(10, 460, 300, 80);
 		frame.getContentPane().add(textAreaSend);
 		textAreaSend.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
+		
+		
+		textAreaSend.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				//e.getKeyCode();
+				int keyCode = e.getKeyCode();
+				if (keyCode==10) {
+					if(onSendButtonCallback != null)
+						onSendButtonCallback.run();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+			}
+			
+		}); 
 		
 		
 		buttonSend = new JButton("Send");
@@ -286,5 +314,9 @@ public class ClientGUI implements IClientGUI {
 	public String getMessage() {
 		return SingleLineSanitizer.sanitize(this.textAreaSend.getText()); 
 	}
+	
+	public void keyPressed(KeyEvent enter) { // source https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
+        displayDialog(null, "Enter key pressed: Message Sent ");
+    }
 
 }
