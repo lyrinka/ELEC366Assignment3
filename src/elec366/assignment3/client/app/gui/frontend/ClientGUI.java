@@ -21,6 +21,11 @@ import javax.swing.text.StyledDocument;
 import elec366.assignment3.richtext.RichText;
 import elec366.assignment3.util.SingleLineSanitizer;
 
+/*
+ * This class applies to only client.
+ * 
+ * This is the concrete implementation of client-side GUI. 
+ */
 public class ClientGUI implements IClientGUI {
 
 	private final JFrame frame; 

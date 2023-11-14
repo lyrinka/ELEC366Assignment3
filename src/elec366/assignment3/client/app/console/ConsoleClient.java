@@ -8,6 +8,13 @@ import elec366.assignment3.client.gameplay.ChatClient;
 import elec366.assignment3.type.ChatMessageType;
 import elec366.assignment3.util.LoggerUtil;
 
+/*
+ * This class applies to only client.
+ * 
+ * This class launches a headless client that does not have any GUI. 
+ * This class is used for debugging purposes before the integration between
+ * UI branches and backend development. 
+ */
 public class ConsoleClient extends ChatClient {
 
 	private final ConsoleInputThread consoleInputThread;

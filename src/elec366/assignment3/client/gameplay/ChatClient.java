@@ -11,6 +11,15 @@ import elec366.assignment3.protocol.packet.impl.PacketOutChat;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
 import elec366.assignment3.type.ChatMessageType;
 
+/*
+ * This class applies to only client.
+ * 
+ * The chat client is the 4th application layer, and the final layer for networking. 
+ * The chat client handles player chats, command issues, connections and disconnection, and player list displays. 
+ * Chat application related functionalities are all concentrated here, 
+ * although most of the functionalities are handled by the server for extensibility. 
+ * The chat client is simple compared to chat server.
+ */
 public abstract class ChatClient extends SecurePacketClient {
 
 	private final String username; 

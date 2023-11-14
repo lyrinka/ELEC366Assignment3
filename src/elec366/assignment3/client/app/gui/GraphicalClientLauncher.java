@@ -9,6 +9,13 @@ import elec366.assignment3.client.app.type.ConnectionInformation;
 import elec366.assignment3.util.LoggerUtil;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only client.
+ * 
+ * The graphical client launcher launches the UI, 
+ * and once the user has input a valid username and port, 
+ * it launches the core graphical client, which handles networking interactions.
+ */
 public class GraphicalClientLauncher implements Runnable {
 
 	private ConnectionInformation conn; 

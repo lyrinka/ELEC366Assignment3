@@ -11,6 +11,12 @@ import elec366.assignment3.richtext.RichTextParser;
 import elec366.assignment3.type.ChatMessageType;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only client.
+ * 
+ * The graphical client is the 5th and the final application layer for a graphical client. 
+ * The graphical client simply links UI interactions with the lower layer chat client. 
+ */
 public class GraphicalClient extends ChatClient {
 
 	private final String username; 

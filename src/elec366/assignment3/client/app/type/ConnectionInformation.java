@@ -1,5 +1,10 @@
 package elec366.assignment3.client.app.type;
 
+/*
+ * This class applies to only client.
+ * 
+ * Connection information groups the host and port of a TCP connection target.
+ */
 public class ConnectionInformation {
 
 	private String host; 

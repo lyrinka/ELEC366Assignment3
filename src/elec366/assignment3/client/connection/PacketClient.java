@@ -15,6 +15,17 @@ import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 
+/*
+ * This class applies to only client.
+ * 
+ * The packet client is the 2nd application layer of networking.
+ * The packet client hides SDUs and worker interactions, 
+ * instead abstract communication with a set of packets (PDUs). 
+ * 
+ * The packet client has its own processing thread. 
+ * Upper layer do not create new threads (except GUI), 
+ * so there will be in total 3 networking threads.
+ */
 public abstract class PacketClient {
 	
 	private static final String TAG = "PacketClient"; 
