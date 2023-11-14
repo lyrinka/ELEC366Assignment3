@@ -10,6 +10,15 @@ import elec366.assignment3.protocol.packet.impl.PacketInSetSessionKey;
 import elec366.assignment3.protocol.packet.impl.PacketOutSessionAck;
 import elec366.assignment3.protocol.packet.impl.PacketOutSetPublicKey;
 
+/*
+ * This class applies to only client.
+ * 
+ * The secure packet client is the 3rd application layer of networking.
+ * The secure packet client handles secure session establishment flow. 
+ * Once a secure session has established, control is transferred to higher layers. 
+ * 
+ * Higher layers extend this class and implements the abstract methods. 
+ */
 public abstract class SecurePacketClient extends PacketClient {
 
 	private static enum SessionState {

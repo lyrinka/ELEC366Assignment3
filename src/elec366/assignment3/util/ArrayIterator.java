@@ -2,6 +2,9 @@ package elec366.assignment3.util;
 
 import java.util.Iterator;
 
+/*
+ * Iterator of an array. 
+ */
 public class ArrayIterator<E> implements Iterator<E> {
 
 	private final E[] array; 

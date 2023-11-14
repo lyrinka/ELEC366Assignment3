@@ -12,6 +12,12 @@ import elec366.assignment3.server.gameplay.command.impl.CommandList;
 import elec366.assignment3.server.gameplay.command.impl.CommandStop;
 import elec366.assignment3.server.gameplay.command.impl.CommandTell;
 
+/*
+ * This class applies to only server.
+ * 
+ * This enum contains the labels (names) and the main class of 
+ * all commands that a player can execute. 
+ */
 public enum CommandType {
 
 	HELP(CommandHelp.class, "help", "?"), 

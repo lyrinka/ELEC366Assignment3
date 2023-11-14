@@ -9,6 +9,13 @@ import elec366.assignment3.server.gameplay.command.CommandExecutor;
 import elec366.assignment3.server.gameplay.command.CommandExecutorInstantiationException;
 import elec366.assignment3.server.gameplay.command.CommandType;
 
+/*
+ * This class applies to only server.
+ * 
+ * Help command: 
+ * - /help					Displays general help.
+ * - /help <command-name>	Displays help specific to a command.
+ */
 public class CommandHelp extends CommandExecutor {
 
 	public CommandHelp(ChatServer server, Player player, String label, String command, String rawInput) {

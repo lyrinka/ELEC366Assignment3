@@ -6,6 +6,12 @@ import elec366.assignment3.protocol.serdes.PayloadDeserializer;
 import elec366.assignment3.protocol.serdes.PayloadSerializer;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This packet is sent by the client to the server
+ * when the client sends a chat message. 
+ */
 public class PacketInChat extends Packet.In {
 	
 	private final String message; 

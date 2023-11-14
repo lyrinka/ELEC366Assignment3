@@ -8,6 +8,11 @@ import elec366.assignment3.server.app.gui.frontend.ServerGUI;
 import elec366.assignment3.util.LoggerUtil;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only server.
+ * 
+ * This class launches the GUI and the server. 
+ */
 public class GraphicalServerLauncher implements Runnable {
 
 	private final int port; 

@@ -19,6 +19,17 @@ import elec366.assignment3.network.sdu.UpstreamSDU;
 import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only client.
+ * 
+ * The client connection handler is the 1st application layer of networking. 
+ * The connection handler establishes a TCP connection with socket and
+ * immediately starts a connection worker afterwards. 
+ * The client connection handler does not have its own thread.
+ * 
+ * The connection handler dispatches downstream SDUs to the worker
+ * and combines upstream SDUs into a single queue. 
+ */
 public class ClientConnectionHandler {
 	
 	private final Logger logger; 

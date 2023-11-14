@@ -8,6 +8,14 @@ import elec366.assignment3.server.gameplay.Player;
 import elec366.assignment3.server.gameplay.command.CommandExecutor;
 import elec366.assignment3.type.ChatMessageType;
 
+/*
+ * This class applies to only server.
+ * 
+ * Tell command:
+ * - /tell <user> <content>		Sends a private message to the specified user
+ * 
+ * The tell command is internally used by clients for private messaging.
+ */
 public class CommandTell extends CommandExecutor {
 
 	public CommandTell(ChatServer server, Player player, String label, String command, String rawInput) {

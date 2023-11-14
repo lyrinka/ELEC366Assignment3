@@ -6,6 +6,14 @@ import elec366.assignment3.protocol.serdes.PayloadDeserializer;
 import elec366.assignment3.protocol.serdes.PayloadSerializer;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This packet is sent by the client to the server
+ * to indicate the username of the client. 
+ * The packet is sent right after the peers has established
+ * secure encrypted communication. 
+ */
 public class PacketInLogin extends Packet.In {
 
 	private final String username; 

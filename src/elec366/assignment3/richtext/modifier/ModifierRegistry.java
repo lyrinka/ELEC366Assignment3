@@ -3,6 +3,13 @@ package elec366.assignment3.richtext.modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * The registry stores all modifiers and their codes (&x, x is the code).
+ * The parser obtains modifiers from the registry. 
+ * This permits adding more modifiers with little code changes. 
+ */
 public class ModifierRegistry {
 
 	public static final char prefixChar = '&'; 

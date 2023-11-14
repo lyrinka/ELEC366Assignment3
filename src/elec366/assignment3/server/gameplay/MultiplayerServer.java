@@ -16,6 +16,16 @@ import elec366.assignment3.protocol.packet.impl.PacketInQueryPlayerList;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
 import elec366.assignment3.server.connection.SecurePacketServer;
 
+/*
+ * This class applies to only server.
+ * 
+ * The multiplayer server is the 4th application layer of networking. 
+ * The multiplayer server handles player logins and keeps hold of a registry of online players.
+ * Kicking of players with duplicate names is performed in this layer. 
+ * Once the player successfully logs in with a valid username, control is transferred to higher layers. 
+ * 
+ * Higher layers extend this class and implements the abstract methods.
+ */
 public abstract class MultiplayerServer extends SecurePacketServer {
 	
 	private final Map<Integer, Optional<Player>> playerMap; 

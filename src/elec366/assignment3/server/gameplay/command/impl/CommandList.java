@@ -7,6 +7,12 @@ import elec366.assignment3.server.gameplay.ChatServer;
 import elec366.assignment3.server.gameplay.Player;
 import elec366.assignment3.server.gameplay.command.CommandExecutor;
 
+/*
+ * This class applies to only server.
+ * 
+ * List command:
+ * - /list			Shows a list of online players.
+ */
 public class CommandList extends CommandExecutor {
 
 	public CommandList(ChatServer server, Player player, String label, String command, String rawInput) {

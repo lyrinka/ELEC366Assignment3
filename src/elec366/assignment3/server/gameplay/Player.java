@@ -7,6 +7,21 @@ import elec366.assignment3.protocol.packet.impl.PacketOutChat;
 import elec366.assignment3.protocol.packet.impl.PacketOutPlayerList;
 import elec366.assignment3.type.ChatMessageType;
 
+/*
+ * This class applies to only server.
+ * 
+ * Represents an online player (chat server user). 
+ * The client has to be
+ * - connected, 
+ * - established a secure session, 
+ * - logged in with a valid username
+ * to be registered in the player registry of MultiplayerServer class. 
+ * 
+ * Player names are case-insensitive. 
+ * 
+ * The class gets its name "Player" from Minecraft, 
+ * although the server does not provide any game content. 
+ */
 public class Player {
 
 	private final MultiplayerServer server;

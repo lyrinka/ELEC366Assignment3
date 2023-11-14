@@ -7,6 +7,12 @@ import elec366.assignment3.server.gameplay.ChatServer;
 import elec366.assignment3.server.gameplay.Player;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only server.
+ * 
+ * The graphical server is the 6th and the final application layer for a graphical client. 
+ * The graphical server class simply links UI interactions with the lower layer chat server. 
+ */
 public class GraphicalServer extends ChatServer {
 
 	private final IServerGUI ui; 

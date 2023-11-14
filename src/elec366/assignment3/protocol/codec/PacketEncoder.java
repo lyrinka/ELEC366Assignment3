@@ -7,6 +7,22 @@ import elec366.assignment3.protocol.crypto.IStreamCipher;
 import elec366.assignment3.protocol.packet.Packet;
 import elec366.assignment3.protocol.packet.PacketDirection;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * A packet encoder converts a packet to a stream of bytes. 
+ * The packet encoder is stateless - it does not have internal states. 
+ * (The exception is the internal cryptography cipher, if present.)
+ * The encoder processes one packet at a time. 
+ * The serialized packet payload length is first written to the output stream as four bytes, 
+ * the one-byte packet header is then written. 
+ * Finally, the serialized packet payload is written. 
+ * The encoding is performed in network order (big endian). 
+ * 
+ * The encoder supports ciphering - a cipher implementing the IStreamCipher interface
+ * can be attached to the encoder any time. 
+
+ */
 public class PacketEncoder implements ICipherable {
 	
 	private IStreamCipher cipher; 

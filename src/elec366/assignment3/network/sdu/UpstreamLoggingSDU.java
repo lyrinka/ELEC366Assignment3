@@ -3,6 +3,15 @@ package elec366.assignment3.network.sdu;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This SDU and its subclasses are sent by the connection worker
+ * when the worker has a message and/or an exception to inform
+ * the upper layers.
+ * 
+ * This SDU has sub-classes. 
+ */
 public class UpstreamLoggingSDU extends UpstreamSDU {
 
 	private final String message; 

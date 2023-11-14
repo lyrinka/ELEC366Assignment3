@@ -5,6 +5,17 @@ import java.util.Arrays;
 import elec366.assignment3.protocol.serdes.exception.PayloadDeserializationException;
 import elec366.assignment3.protocol.serdes.exception.PayloadSizeException;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * The deserializer extracts bytes, numbers, arrays, strings, and other data structures
+ * from a block of bytes, on demand. 
+ * 
+ * The deserializer throws an exception if the data format is unexpected, 
+ * or if the input block of bytes (payload) is drained while the deserialize expects more. 
+ * 
+ * The deserializer is stateful. 
+ */
 public class PayloadDeserializer {
 	
 	private final String packetName; 

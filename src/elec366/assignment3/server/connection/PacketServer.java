@@ -16,6 +16,19 @@ import elec366.assignment3.server.sdu.UpstreamConnectionSDU;
 import elec366.assignment3.server.sdu.UpstreamServerQuitSDU;
 import elec366.assignment3.util.Pair;
 
+/*
+ * This class applies to only server.
+ * 
+ * The packet server is the 2nd application layer of networking.
+ * The packet server hides SDUs and worker interactions, 
+ * instead abstracts communication with a set of packets (PDUs). 
+ * 
+ * The packet server has its own processing thread. 
+ * Upper layers do not create new threads (except GUI),
+ * so for N inbound connections, there are in total 2 + 2N networking threads. 
+ * 
+ * Higher layers extend this class and implements the abstract methods. 
+ */
 public abstract class PacketServer {
 
 	private static final String TAG = "PacketServer"; 

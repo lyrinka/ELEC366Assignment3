@@ -14,6 +14,11 @@ import elec366.assignment3.richtext.modifier.IBaseModifier;
 import elec366.assignment3.richtext.modifier.IColorModifier;
 import elec366.assignment3.util.SingleLineSanitizer;
 
+/*
+ * This class applies to only client.
+ * 
+ * The style manager provides utility methods for rendering pre-compiled rich text in a Swing JTextPane. 
+ */
 public class StyleManager {
 	
 	public void addNewLine(StyledDocument doc) {

@@ -1,5 +1,10 @@
 package elec366.assignment3.richtext.modifier;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * Represents a format modifier that can change the style of the text. 
+ */
 public enum FormatModifier implements IBaseModifier {
 	
 	BOLD			('l', "[1m"), 

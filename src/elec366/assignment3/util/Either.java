@@ -1,5 +1,8 @@
 package elec366.assignment3.util;
 
+/*
+ * A wrapper for either U or V. 
+ */
 public class Either<U, V> {
 
 	public static <U, V> Either<U, V> ofFirst(U first) {

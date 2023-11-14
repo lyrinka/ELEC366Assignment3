@@ -2,6 +2,11 @@ package elec366.assignment3.client.app.gui.frontend;
 
 import elec366.assignment3.richtext.RichText;
 
+/*
+ * This class applies to only client.
+ * 
+ * Denotes that the implementing class holds an implementation of client-side GUI.
+ */
 public interface IClientGUI {
 	
 	enum State {

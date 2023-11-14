@@ -1,5 +1,8 @@
 package elec366.assignment3.util;
 
+/*
+ * A settable and resettable wrapper of a Boolean flag. 
+ */
 public class Flag {
 
 	private boolean flag; 
