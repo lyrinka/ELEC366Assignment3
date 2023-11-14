@@ -43,14 +43,14 @@ public class ClientGUI implements IClientGUI {
 	
 	public ClientGUI() {
 		
+		//To create the window for the chatting client application
 		frame = new JFrame();
 		frame.setBounds(100, 100, 500, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Chatting Client");
 		frame.getContentPane().setLayout(null);
 		
-		//For some reason it made me add the type here.. did you create the labels somewhere else?
-		//need to see if this will fit properly
+		//To create the label for the server address
 		labelAddressName = new JLabel("Server Address: ");
 		labelAddressName.setBounds(10, 20, 200, 20);
 		labelAddressName.setFont(new Font("Times", Font.BOLD, 12));
@@ -58,11 +58,13 @@ public class ClientGUI implements IClientGUI {
 		labelAddressName.setVerticalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(labelAddressName);
 		
+		//Text field to enter the server address
 		textfieldAddressName = new JTextField();
 		textfieldAddressName.setFont(new Font("Times", Font.BOLD, 12));
 		textfieldAddressName.setBounds(115, 20, 180, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldAddressName);
 		
+		//Label for client name
 		labelClientName = new JLabel("Client Name: "); 
 		labelClientName.setBounds(10, 50, 100, 30);
 		labelClientName.setFont(new Font("Times", Font.BOLD, 12));
@@ -71,40 +73,35 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(labelClientName);
 		
 		
-		// TODO: this text is a bit clipped
-		//Should no longer be clipped but it needs to be tested 
+		//Text field for client's name 
 		textfieldClientName = new JTextField();
 		textfieldClientName.setFont(new Font("Times", Font.BOLD, 12));
 		textfieldClientName.setBounds(90, 55, 125, 20); // x axis, y axis, width, height
 		frame.getContentPane().add(textfieldClientName);
 		
 		
-		// TODO: The button is not wide enough to display "Connecting.."
-		//It should be wide enough now
+		// Button to connect client and server
 		buttonconnect = new JButton("Connect");
 		buttonconnect.setBounds(230, 55, 170, 20);// x axis, y axis, width, height 
 		buttonconnect.addActionListener(ignored -> {
-			if(this.onConnectionButtonCallback == null) return; 
-			this.onConnectionButtonCallback.run(); 
+			if(this.onConnectionButtonCallback == null) return; //No callback is registered so no callback is invoked
+			this.onConnectionButtonCallback.run(); //invoked callback if applicable
 		});
 		frame.getContentPane().add(buttonconnect);
 		
 		
-		// TODO: wrapping and scrolling ->wrapping and scrolling should be okay now
-		// TODO: right click menu -> what I found to support right clicks https://stackoverflow.com/questions/35513767/right-click-focus-in-swing
-		// TODO: rich text improvement -> I think we need to add a text pane for this to work -> example from online https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
-		// Source: https://stackoverflow.com/questions/6068398/how-to-add-text-different-color-on-jtextpane
-		textAreaDisplay = new JTextPane();
-//		textAreaDisplay.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
-		textAreaDisplay.setEditable(false);
 		
-		textAreaScroller = new JScrollPane(textAreaDisplay); // Source: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm this is where I found the below lines as well4
+		//For rich text improvement the source is: https://stackoverflow.com/questions/6068398/how-to-add-text-different-color-on-jtextpane
+		textAreaDisplay = new JTextPane();
+		textAreaDisplay.setEditable(false); //To ensure the display isn't editable
+		
+		// Used this source to add the scrolling feature: http://www.java2s.com/Code/Java/Swing-JFC/ViewingRTFformat.htm 
+		textAreaScroller = new JScrollPane(textAreaDisplay); 
 		textAreaScroller.setBounds(10, 90, 400, 300);
-		textAreaScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		textAreaScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS); // The source used for this line: https://stackoverflow.com/questions/10177183/add-scroll-into-text-area
 		frame.getContentPane().add(textAreaScroller); 
 		
-		//need to use the users entered name here
-		//Set up an if connected function the following appears, If not connected the above appears
+		//Label to select who the message should be sent to
 		labelSend = new JLabel("Send to: "); 
 		labelSend.setBounds(10, 390, 300, 30);
 		labelSend.setFont(new Font("Times", Font.BOLD, 12));
@@ -113,22 +110,19 @@ public class ClientGUI implements IClientGUI {
 		frame.getContentPane().add(labelSend);
 		
 		
-		//Create the array or arrays and convert it to strings so it can be added to the combo box
-		//an example to see it works
-		names = new JComboBox<String>(); // Source https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
+		names = new JComboBox<String>(); // Source for the combo box feature: https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
 		names.setBounds(100, 390, 300, 30);
 		names.setFont(new Font("Times", Font.BOLD, 12));
 		frame.getContentPane().add(names);
 		
 		
-		// TODO: limit text to single line
-		// TODO: press enter to send (same effect as pressing the send button)
+		
 		textAreaSend = new JTextArea();
 		textAreaSend.setBounds(10, 460, 300, 80);
 		frame.getContentPane().add(textAreaSend);
 		textAreaSend.setLineWrap(true); //Source: https://stackoverflow.com/questions/8858584/how-to-wrap-text-in-a-jtextarea
 		
-		
+		//To create the keylistener so that when enter is pressed it can send a message
 		textAreaSend.addKeyListener(new KeyListener() {
 
 			@Override
@@ -138,12 +132,17 @@ public class ClientGUI implements IClientGUI {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				//e.getKeyCode();
 				int keyCode = e.getKeyCode();
+<<<<<<< Updated upstream
 				if (keyCode==10) {
 					e.consume();
 					if(onSendButtonCallback != null)
 						onSendButtonCallback.run();
+=======
+				if (keyCode==10) { //Int 10 is the code for the enter button
+					if(onSendButtonCallback != null) //if enter is not pushed nothing happens
+						onSendButtonCallback.run(); // if button is pressed backend is invoked
+>>>>>>> Stashed changes
 				}
 			}
 
@@ -154,18 +153,18 @@ public class ClientGUI implements IClientGUI {
 			
 		}); 
 		
-		
+		//Creating the send button
 		buttonSend = new JButton("Send");
 		buttonSend.setBounds(350, 490, 100, 20);// x axis, y axis, width, height
 		buttonSend.addActionListener(ignored -> {
-			if(this.onSendButtonCallback == null) return; 
-			this.onSendButtonCallback.run();
+			if(this.onSendButtonCallback == null) return;  //if send button is not pressed nothing happens
+			this.onSendButtonCallback.run(); // if button is pressed backend is invoked
 		});
 		frame.getContentPane().add(buttonSend);
 		
-		this.styleManager = new StyleManager(); 
+		this.styleManager = new StyleManager(); //Class created to manage rich text that appears on the GUI
 		
-		this.setState(IClientGUI.DEFAULT_STATE);
+		this.setState(IClientGUI.DEFAULT_STATE); //To enable the client name and server address fields while hiding the other buttons/actions
 		
 	}
 
@@ -194,13 +193,14 @@ public class ClientGUI implements IClientGUI {
 	public void closeUI() {
 		frame.dispose();
 	}
-
+//To alternate the user states
 	@Override
 	public void setState(State state) {
 		if(state == null) return; 
 		boolean showSendUI; 
 		switch(state) {
 			default:
+				//To enable the connect button, client name and server address text fields while disabling the other labels,buttons and text fields
 			case DISCONNECTED: {
 				this.buttonconnect.setText("Connect");
 				this.buttonconnect.setEnabled(true);
@@ -211,6 +211,7 @@ public class ClientGUI implements IClientGUI {
 				this.textAreaSend.setText("");
 				break; 
 			}
+			//While the client and server is connecting this state appears the only enabled button states connecting while the rest isn't enabled
 			case CONNECTING: {
 				this.buttonconnect.setText("Connecting..");
 				this.buttonconnect.setEnabled(false);
@@ -219,6 +220,8 @@ public class ClientGUI implements IClientGUI {
 				showSendUI = false; 
 				break; 
 			}
+			//The connect button now says disconnect and it is enabled, the client name and server address text fields are disabled since they have already been populated.
+			//The send button, send label, the text area to send messages and the names of the players are visible
 			case CONNECTED: {
 				this.buttonconnect.setText("Disconnect");
 				this.buttonconnect.setEnabled(true);
@@ -234,6 +237,7 @@ public class ClientGUI implements IClientGUI {
 		this.names.setVisible(showSendUI);
 	}
 
+	//Displays a dialog, if username or server address doesn't match desired format a dialog is produced
 	@Override
 	public void displayDialog(String dialogTitle, String displayedMessage) {
 		if(displayedMessage == null || displayedMessage.isEmpty()) return; 
@@ -241,23 +245,27 @@ public class ClientGUI implements IClientGUI {
 		JOptionPane.showMessageDialog(null, displayedMessage, dialogTitle, JOptionPane.INFORMATION_MESSAGE);	
 	}
 
+	//To set the title of the application
 	@Override
 	public void setApplicationTitle(String applicationTitle) {
 		if(applicationTitle == null || applicationTitle.isEmpty()) return; 
 		this.frame.setTitle(applicationTitle);
 	}
 
+	//To set the server address
 	@Override
 	public void setServerAddress(String address) {
 		if(address == null) return; 
 		this.textfieldAddressName.setText(address);
 	}
 	
+	//Cleared each time the button is connected in a new instance 
 	@Override
 	public void clearChat() {
 		this.textAreaDisplay.setText("");
 	}
 
+	//Adds the chat message that was sent to a new line in the text area
 	@Override
 	public void appendChat(String appendedLine) {
 		if(appendedLine == null) return; 
@@ -266,12 +274,14 @@ public class ClientGUI implements IClientGUI {
 		this.styleManager.addNewLine(doc);
 	}
 	
+	//Adds the rich text in the text area in a new line
 	public void appendChat(RichText appendedLine) {
 		StyledDocument doc = this.textAreaDisplay.getStyledDocument(); 
 		this.styleManager.addRichText(doc, appendedLine);
 		this.styleManager.addNewLine(doc);
 	}
 
+	//Array of player names
 	@Override
 	public void setOnlinePlayers(String[] onlinePlayerNames) {
 		// Consulted source:
