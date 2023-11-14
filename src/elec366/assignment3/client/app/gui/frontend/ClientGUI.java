@@ -141,6 +141,7 @@ public class ClientGUI implements IClientGUI {
 				//e.getKeyCode();
 				int keyCode = e.getKeyCode();
 				if (keyCode==10) {
+					e.consume();
 					if(onSendButtonCallback != null)
 						onSendButtonCallback.run();
 				}
