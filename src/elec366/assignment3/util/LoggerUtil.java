@@ -8,6 +8,9 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+/*
+ * Generates loggers with beautiful format. 
+ */
 public class LoggerUtil {
 
 	public static Logger createLogger(String tag) {

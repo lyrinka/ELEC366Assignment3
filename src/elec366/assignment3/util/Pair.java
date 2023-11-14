@@ -1,5 +1,8 @@
 package elec366.assignment3.util;
 
+/*
+ * A wrapper for a pair of U and V. 
+ */
 public class Pair <U, V> {
 
 	private final U first; 

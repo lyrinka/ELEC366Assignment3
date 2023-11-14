@@ -3,6 +3,12 @@ package elec366.assignment3.type;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * This class is common to server and client. 
+ * 
+ * This enum represents the type of a message sent from the server to the client. 
+ * Please see: PacketOutChat.
+ */
 public enum ChatMessageType {
 
 	DEFAULT			(0x0), 

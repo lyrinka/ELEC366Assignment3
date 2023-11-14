@@ -2,6 +2,10 @@ package elec366.assignment3.util;
 
 import java.util.Iterator;
 
+/*
+ * An iterator of characters within a string. 
+ * The iterator has functionality expansions, for instance, obtaining the next N characters.
+ */
 public class StringCharIterator implements Iterator<Character> {
 
 	private final String string; 
